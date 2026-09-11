@@ -17,11 +17,11 @@ import net.minecraft.world.item.Items;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class PlayerUtil {
+public final class PlayerPokeParty {
     private final ServerPlayer serverPlayer;
     private final PlayerPartyStore partyStore;
 
-    public PlayerUtil(ServerPlayer serverPlayer) {
+    public PlayerPokeParty(ServerPlayer serverPlayer) {
         this.serverPlayer = serverPlayer;
         this.partyStore = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer);
     }

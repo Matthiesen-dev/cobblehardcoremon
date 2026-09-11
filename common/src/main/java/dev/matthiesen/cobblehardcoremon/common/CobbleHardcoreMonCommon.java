@@ -4,7 +4,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
-import dev.matthiesen.cobblehardcoremon.common.util.PlayerUtil;
+import dev.matthiesen.cobblehardcoremon.common.util.PlayerPokeParty;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
@@ -38,7 +38,7 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     public void handlePlayerTick(PlayerEvent.EndTick event) {
         if (!(event.player().tickCount % 20 == 0)) return; // Only check every second to reduce performance impact
-        PlayerUtil playerInstance = new PlayerUtil(event.player());
+        PlayerPokeParty playerInstance = new PlayerPokeParty(event.player());
         for (Map.Entry<PokePartySlot, PartyEntry> entry : playerInstance.getPlayerPartyStatus().entrySet()) {
             PartyEntry partyEntry = entry.getValue();
             if (partyEntry.healthStatus() == PokeHealthStatus.FAINTED) {
