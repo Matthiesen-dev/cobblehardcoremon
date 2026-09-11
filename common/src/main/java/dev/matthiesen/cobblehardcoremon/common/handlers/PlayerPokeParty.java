@@ -29,7 +29,8 @@ public final class PlayerPokeParty {
                         playerInstance.alertPlayerAndRemovedPokemon(faintedPokemon);
                     }
                 } else {
-                    CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to find fainted Pokemon in player party at slot: " + entry.getKey().getIndex());
+                    CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to find fainted Pokemon in player party at slot: " +
+                            entry.getKey().getIndex());
                 }
             }
         }
@@ -61,10 +62,11 @@ public final class PlayerPokeParty {
     public void alertPlayerAndRemovedPokemon(Pokemon pokemon) {
         if (partyStore.remove(pokemon)) {
             MutableComponent message = pokemon.getDisplayName(false);
-            message = message.append(" has fainted and is not holding a totem, and has been removed from your party.");
-            serverPlayer.sendSystemMessage(message.withStyle(ChatFormatting.RED));
+            serverPlayer.sendSystemMessage(message.append(" has fainted and is not holding a totem, and has been removed from your party.")
+                    .withStyle(ChatFormatting.RED));
         } else {
-            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " + pokemon.getDisplayName(false).getString());
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " +
+                    pokemon.getDisplayName(false).getString());
         }
     }
 
@@ -73,8 +75,8 @@ public final class PlayerPokeParty {
             pokemon.heal();
             pokemon.removeHeldItem();
             MutableComponent message = pokemon.getDisplayName(false);
-            message = message.append(" was holding a totem, which has been consumed to prevent it from being removed from your party.");
-            serverPlayer.sendSystemMessage(message.withStyle(ChatFormatting.GOLD));
+            serverPlayer.sendSystemMessage(message.append(" was holding a totem, which has been consumed to prevent it from being removed from your party.")
+                    .withStyle(ChatFormatting.GOLD));
             new SoundsPlayer(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value()).play(serverPlayer);
             return true;
         }
