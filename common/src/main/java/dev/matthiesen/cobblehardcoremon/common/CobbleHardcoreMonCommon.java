@@ -9,7 +9,6 @@ import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
 import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -39,20 +38,17 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     public void handlePlayerTick(PlayerEvent.EndTick event) {
         if (!(event.player().tickCount % 20 == 0)) return; // Only check every second to reduce performance impact
-        ServerPlayer player = event.player();
-        Map<PokePartySlot, PartyEntry> partyStatusMap = PlayerUtil.getPlayerPartyStatus(player);
-        for (Map.Entry<PokePartySlot, PartyEntry> entry : partyStatusMap.entrySet()) {
-            PokePartySlot slot = entry.getKey();
+        PlayerUtil playerInstance = new PlayerUtil(event.player());
+        for (Map.Entry<PokePartySlot, PartyEntry> entry : playerInstance.getPlayerPartyStatus().entrySet()) {
             PartyEntry partyEntry = entry.getValue();
-            PokeHealthStatus status = partyEntry.healthStatus();
-            if (status == PokeHealthStatus.FAINTED) {
+            if (partyEntry.healthStatus() == PokeHealthStatus.FAINTED) {
                 Pokemon faintedPokemon = partyEntry.pokemon();
                 if (faintedPokemon != null) {
-                    if (!PlayerUtil.popPokemonTotem(player, faintedPokemon)) {
-                        PlayerUtil.alertPlayerAndRemovedPokemon(player, faintedPokemon);
+                    if (!playerInstance.popPokemonTotem(faintedPokemon)) {
+                        playerInstance.alertPlayerAndRemovedPokemon(faintedPokemon);
                     }
                 } else {
-                    CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to find fainted Pokemon in player party at slot: " + slot.getIndex());
+                    CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to find fainted Pokemon in player party at slot: " + entry.getKey().getIndex());
                 }
             }
         }
