@@ -1,4 +1,4 @@
-# template-cobblemon-sidemod
+# CobbleHardcoreMon
 
 <div>
   <img src="https://mods.matthiesen.dev/badges/matthiesenCore.svg" alt="Matthiesen Core">

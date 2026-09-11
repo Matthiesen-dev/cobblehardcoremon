@@ -1,16 +1,16 @@
-package dev.matthiesen.template_cobblemon_sidemod.common;
+package dev.matthiesen.cobblehardcoremon.common;
 
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import org.jetbrains.annotations.NotNull;
 
-public final class TemplateCobblemonSidemodCommon extends AbstractCommonMod {
-    public static final String MOD_ID = "template_cobblemon_sidemod";
-    public static final String MOD_NAME = "Template Side-Mod";
-    public static @Token final String METRICS_TOKEN = "";
-    public static final TemplateCobblemonSidemodCommon INSTANCE = new TemplateCobblemonSidemodCommon();
+public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
+    public static final String MOD_ID = "cobblehardcoremon";
+    public static final String MOD_NAME = "CobbleHardcoreMon";
+    public static @Token final String METRICS_TOKEN = "768f3c7f3b02526ca25e65c50a0d6d98";
+    public static final CobbleHardcoreMonCommon INSTANCE = new CobbleHardcoreMonCommon();
 
-    public TemplateCobblemonSidemodCommon() {
+    public CobbleHardcoreMonCommon() {
         super(MOD_ID, MOD_NAME);
     }
 

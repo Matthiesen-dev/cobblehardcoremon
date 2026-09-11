@@ -19,10 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.matthiesen.template_cobblemon_sidemod.fabric.TemplateCobblemonSidemodFabric"
-    ],
-    "client": [
-      "dev.matthiesen.template_cobblemon_sidemod.fabric.TemplateCobblemonSidemodFabricClient"
+      "dev.matthiesen.cobblehardcoremon.fabric.CobbleHardcoreMonFabric"
     ]
   },
   "depends": {
