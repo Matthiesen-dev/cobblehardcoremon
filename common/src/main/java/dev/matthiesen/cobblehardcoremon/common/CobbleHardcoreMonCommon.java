@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblehardcoremon.common;
 
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
 import dev.matthiesen.cobblehardcoremon.common.util.PlayerUtil;
@@ -39,12 +40,13 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
     public void handlePlayerTick(PlayerEvent.EndTick event) {
         if (!(event.player().tickCount % 20 == 0)) return; // Only check every second to reduce performance impact
         ServerPlayer player = event.player();
-        Map<PokePartySlot, PokeHealthStatus> partyStatusMap = PlayerUtil.getPlayerPartyStatus(player);
-        for (Map.Entry<PokePartySlot, PokeHealthStatus> entry : partyStatusMap.entrySet()) {
+        Map<PokePartySlot, PartyEntry> partyStatusMap = PlayerUtil.getPlayerPartyStatus(player);
+        for (Map.Entry<PokePartySlot, PartyEntry> entry : partyStatusMap.entrySet()) {
             PokePartySlot slot = entry.getKey();
-            PokeHealthStatus status = entry.getValue();
+            PartyEntry partyEntry = entry.getValue();
+            PokeHealthStatus status = partyEntry.healthStatus();
             if (status == PokeHealthStatus.FAINTED) {
-                Pokemon faintedPokemon = PlayerUtil.getPlayerPartyStore(player).get(slot.getIndex());
+                Pokemon faintedPokemon = partyEntry.pokemon();
                 if (faintedPokemon != null) {
                     if (!PlayerUtil.popPokemonTotem(player, faintedPokemon)) {
                         PlayerUtil.alertPlayerAndRemovedPokemon(player, faintedPokemon);

@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
+import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
 import dev.matthiesen.matthiesen_core.common.utility.SoundsPlayer;
@@ -21,9 +22,9 @@ public final class PlayerUtil {
         return Cobblemon.INSTANCE.getStorage().getParty(player);
     }
 
-    public static Map<PokePartySlot, PokeHealthStatus> getPlayerPartyStatus(ServerPlayer player) {
+    public static Map<PokePartySlot, PartyEntry> getPlayerPartyStatus(ServerPlayer player) {
         PlayerPartyStore playerPartyStore = getPlayerPartyStore(player);
-        Map<PokePartySlot, PokeHealthStatus> partyStatusMap = new HashMap<>(PokePartySlot.getMaxSlots());
+        Map<PokePartySlot, PartyEntry> partyStatusMap = new HashMap<>(PokePartySlot.getMaxSlots());
         for (int i = 0; i < PokePartySlot.getMaxSlots(); i++) {
             Pokemon partyPokemon = playerPartyStore.get(i);
             PokeHealthStatus status;
@@ -32,7 +33,7 @@ public final class PlayerUtil {
             } else {
                 status = partyPokemon.isFainted() ? PokeHealthStatus.FAINTED : PokeHealthStatus.HEALTHY;
             }
-            partyStatusMap.put(PokePartySlot.fromIndex(i), status);
+            partyStatusMap.put(PokePartySlot.fromIndex(i), new PartyEntry(partyPokemon, status));
         }
         return partyStatusMap;
     }
