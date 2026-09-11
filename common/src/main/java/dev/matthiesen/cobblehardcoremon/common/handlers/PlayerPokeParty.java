@@ -1,4 +1,4 @@
-package dev.matthiesen.cobblehardcoremon.common.util;
+package dev.matthiesen.cobblehardcoremon.common.handlers;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
@@ -18,6 +18,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class PlayerPokeParty {
+    public static void tick(ServerPlayer serverPlayer) {
+        PlayerPokeParty playerInstance = new PlayerPokeParty(serverPlayer);
+        for (Map.Entry<PokePartySlot, PartyEntry> entry : playerInstance.getPlayerPartyStatus().entrySet()) {
+            PartyEntry partyEntry = entry.getValue();
+            if (partyEntry.healthStatus() == PokeHealthStatus.FAINTED) {
+                Pokemon faintedPokemon = partyEntry.pokemon();
+                if (faintedPokemon != null) {
+                    if (!playerInstance.popPokemonTotem(faintedPokemon)) {
+                        playerInstance.alertPlayerAndRemovedPokemon(faintedPokemon);
+                    }
+                } else {
+                    CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to find fainted Pokemon in player party at slot: " + entry.getKey().getIndex());
+                }
+            }
+        }
+    }
+
     private final ServerPlayer serverPlayer;
     private final PlayerPartyStore partyStore;
 
