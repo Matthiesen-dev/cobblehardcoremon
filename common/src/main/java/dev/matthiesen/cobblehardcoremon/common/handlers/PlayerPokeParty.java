@@ -1,8 +1,8 @@
 package dev.matthiesen.cobblehardcoremon.common.handlers;
 
-import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.cobblemon.mod.common.util.PlayerExtensionsKt;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
@@ -41,7 +41,7 @@ public final class PlayerPokeParty {
 
     public PlayerPokeParty(ServerPlayer serverPlayer) {
         this.serverPlayer = serverPlayer;
-        this.partyStore = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer);
+        this.partyStore = PlayerExtensionsKt.party(serverPlayer);
     }
 
     public Map<PokePartySlot, PartyEntry> getPlayerPartyStatus() {
