@@ -23,17 +23,22 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
         return METRICS_TOKEN;
     }
 
+    private boolean isServerRunning = false;
+
     public void initialize() {
         super.initialize();
 
         registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC);
 
+        PlatformEvents.SERVER_STARTED.subscribe(server -> isServerRunning = true);
+        PlatformEvents.SERVER_STOPPING.subscribe(server -> isServerRunning = false);
         PlatformEvents.PLAYER_END_TICK.subscribe(this::handlePlayerTick);
 
         createInfoLog("Initialized");
     }
 
     public void handlePlayerTick(PlayerEvent.EndTick event) {
+        if (!isServerRunning) return; // Only run this logic when the server is running
         if (!(event.player().tickCount % 20 == 0)) return; // Only check every second to reduce performance impact
         PlayerPokeParty.tick(event.player());
     }
