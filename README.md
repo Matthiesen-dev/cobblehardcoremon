@@ -5,8 +5,9 @@
   <img src="https://mods.matthiesen.dev/badges/cobblemon.svg" alt="Cobblemon">
 </div>
 
-Template for a Cobblemon side mod. This template includes the necessary setup for a mod that depends on the Matthiesen Core and Cobblemon, 
-but does not include any specific functionality. You can use this as a starting point for creating your own Cobblemon side mod.
+Hardcore mode for your Cobblemon, if your cobblemon faints and is not holding a Totem, it's gone. Forever.
+
+TODO: Finish this readme, add more details about the mod, and add a link to the documentation.
 
 ## Requirements
 
