@@ -49,8 +49,8 @@ public final class PlayerUtil {
 
     public static boolean popPokemonTotem(ServerPlayer player, Pokemon pokemon) {
         if (pokemon.heldItem().is(Items.TOTEM_OF_UNDYING)) {
-            pokemon.removeHeldItem();
             pokemon.heal();
+            pokemon.removeHeldItem();
             MutableComponent message = pokemon.getDisplayName(false);
             message = message.append(" was holding a totem, which has been consumed to prevent it from being removed from your party.");
             player.sendSystemMessage(message.withStyle(ChatFormatting.GOLD));
