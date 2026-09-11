@@ -4,15 +4,15 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.PlayerExtensionsKt;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
+import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
 import dev.matthiesen.matthiesen_core.common.utility.SoundsPlayer;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.Items;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,27 +59,33 @@ public final class PlayerPokeParty {
         return partyStatusMap;
     }
 
-    public void alertPlayerAndRemovedPokemon(Pokemon pokemon) {
-        if (partyStore.remove(pokemon)) {
-            MutableComponent message = pokemon.getDisplayName(false);
-            serverPlayer.sendSystemMessage(message.append(" has fainted and is not holding a totem, and has been removed from your party.")
-                    .withStyle(ChatFormatting.RED));
-        } else {
-            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " +
-                    pokemon.getDisplayName(false).getString());
-        }
-    }
-
     public boolean popPokemonTotem(Pokemon pokemon) {
-        if (pokemon.heldItem().is(Items.TOTEM_OF_UNDYING)) {
+        if (pokemon.heldItem().is(CobbleHardcoreMonConfig.getTotemItem())) {
             pokemon.heal();
             pokemon.removeHeldItem();
-            MutableComponent message = pokemon.getDisplayName(false);
-            serverPlayer.sendSystemMessage(message.append(" was holding a totem, which has been consumed to prevent it from being removed from your party.")
-                    .withStyle(ChatFormatting.GOLD));
+            String pokemonName = pokemon.getDisplayName(false).toString();
+            Component chatMessage = Component.literal(
+                    CobbleHardcoreMonConfig.SERVER_CONFIG.messages_totemConsumed.get()
+                            .replace("{pokemon}", pokemonName)
+            ).withStyle(ChatFormatting.GOLD);
+            serverPlayer.sendSystemMessage(chatMessage);
             new SoundsPlayer(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value()).play(serverPlayer);
             return true;
         }
         return false;
+    }
+
+    public void alertPlayerAndRemovedPokemon(Pokemon pokemon) {
+        if (partyStore.remove(pokemon)) {
+            String pokemonName = pokemon.getDisplayName(false).toString();
+            Component chatMessage = Component.literal(
+                    CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
+                            .replace("{pokemon}", pokemonName)
+            ).withStyle(ChatFormatting.RED);
+            serverPlayer.sendSystemMessage(chatMessage);
+        } else {
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " +
+                    pokemon.getDisplayName(false).getString());
+        }
     }
 }

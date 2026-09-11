@@ -5,6 +5,7 @@ import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
 import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
+import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
 import org.jetbrains.annotations.NotNull;
 
 public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
@@ -24,6 +25,8 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     public void initialize() {
         super.initialize();
+
+        registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC);
 
         PlatformEvents.PLAYER_END_TICK.subscribe(this::handlePlayerTick);
 
