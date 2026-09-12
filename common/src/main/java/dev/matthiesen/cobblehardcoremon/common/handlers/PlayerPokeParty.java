@@ -16,21 +16,41 @@ import net.minecraft.sounds.SoundEvents;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public final class PlayerPokeParty {
+    // Stored as UUID of the Pokemon and the remaining cooldown seconds.
+    private static final Map<UUID, Integer> pokemonTotemCooldowns = new HashMap<>();
+
     public static void tick(ServerPlayer serverPlayer) {
         PlayerPokeParty playerInstance = new PlayerPokeParty(serverPlayer);
+
         for (Map.Entry<PokePartySlot, PartyEntry> entry : playerInstance.getPlayerPartyStatus().entrySet()) {
             PartyEntry partyEntry = entry.getValue();
             if (partyEntry.healthStatus() == PokeHealthStatus.FAINTED) {
                 Pokemon faintedPokemon = partyEntry.pokemon();
-                if (faintedPokemon != null) {
-                    if (!playerInstance.popPokemonTotem(faintedPokemon)) {
-                        playerInstance.alertPlayerAndRemovedPokemon(faintedPokemon);
+                // Check if the player is not in battle and not busy (e.g., in a menu) before attempting to remove the fainted Pokemon
+                // We check to verify the player is not in battle or busy to avoid weird race conditions with Cobblemon's battle system and party management.
+                if (faintedPokemon != null &&
+                        !PlayerExtensionsKt.isPartyBusy(serverPlayer) &&
+                        !PlayerExtensionsKt.isInBattle(serverPlayer)
+                ) {
+                    // Check if the player's Pokemon has a Totem item and if the cooldown has expired
+                    if (playerInstance.popPokemonTotem(faintedPokemon)) {
+                        // If the Totem was consumed, we can skip the removal process
+                        pokemonTotemCooldowns.put(faintedPokemon.getUuid(), 60); // Set a cooldown of 60 seconds before the Pokemon can be removed again
+                        return;
                     }
-                } else {
-                    CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to find fainted Pokemon in player party at slot: " +
-                            entry.getKey().getIndex());
+
+                    // If the Pokemon does not have a totem to pop, verify if the cooldown has expired before removing it from the party
+                    Integer cooldown = pokemonTotemCooldowns.get(faintedPokemon.getUuid());
+                    if (cooldown == null || cooldown <= 0) {
+                        playerInstance.alertPlayerAndRemovedPokemon(faintedPokemon);
+                        pokemonTotemCooldowns.remove(faintedPokemon.getUuid());
+                    } else {
+                        // Decrement the cooldown for the fainted Pokemon
+                        pokemonTotemCooldowns.put(faintedPokemon.getUuid(), cooldown - 1);
+                    }
                 }
             }
         }
@@ -63,7 +83,7 @@ public final class PlayerPokeParty {
         if (pokemon.heldItem().is(CobbleHardcoreMonConfig.getTotemItem())) {
             pokemon.heal();
             pokemon.removeHeldItem();
-            String pokemonName = pokemon.getDisplayName(false).toString();
+            String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
             Component chatMessage = Component.literal(
                     CobbleHardcoreMonConfig.SERVER_CONFIG.messages_totemConsumed.get()
                             .replace("{pokemon}", pokemonName)
@@ -77,7 +97,7 @@ public final class PlayerPokeParty {
 
     public void alertPlayerAndRemovedPokemon(Pokemon pokemon) {
         if (partyStore.remove(pokemon)) {
-            String pokemonName = pokemon.getDisplayName(false).toString();
+            String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
             Component chatMessage = Component.literal(
                     CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
                             .replace("{pokemon}", pokemonName)
