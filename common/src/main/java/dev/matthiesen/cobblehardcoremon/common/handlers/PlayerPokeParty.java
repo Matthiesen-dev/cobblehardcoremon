@@ -65,47 +65,60 @@ public final class PlayerPokeParty {
     }
 
     public Map<PokePartySlot, PartyEntry> getPlayerPartyStatus() {
-        Map<PokePartySlot, PartyEntry> partyStatusMap = new HashMap<>(PokePartySlot.getMaxSlots());
-        for (int i = 0; i < PokePartySlot.getMaxSlots(); i++) {
-            Pokemon partyPokemon = partyStore.get(i);
-            PokeHealthStatus status;
-            if (partyPokemon == null) {
-                status = PokeHealthStatus.EMPTY_SLOT;
-            } else {
-                status = partyPokemon.isFainted() ? PokeHealthStatus.FAINTED : PokeHealthStatus.HEALTHY;
+        try {
+            Map<PokePartySlot, PartyEntry> partyStatusMap = new HashMap<>(PokePartySlot.getMaxSlots());
+            for (int i = 0; i < PokePartySlot.getMaxSlots(); i++) {
+                Pokemon partyPokemon = partyStore.get(i);
+                PokeHealthStatus status;
+                if (partyPokemon == null) {
+                    status = PokeHealthStatus.EMPTY_SLOT;
+                } else {
+                    status = partyPokemon.isFainted() ? PokeHealthStatus.FAINTED : PokeHealthStatus.HEALTHY;
+                }
+                partyStatusMap.put(PokePartySlot.fromIndex(i), new PartyEntry(partyPokemon, status));
             }
-            partyStatusMap.put(PokePartySlot.fromIndex(i), new PartyEntry(partyPokemon, status));
+            return partyStatusMap;
+        } catch (Exception e) {
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to retrieve player party status: " + e.getMessage(), e);
+            return new HashMap<>();
         }
-        return partyStatusMap;
     }
 
     public boolean popPokemonTotem(Pokemon pokemon) {
-        if (pokemon.heldItem().is(CobbleHardcoreMonConfig.getTotemItem())) {
-            pokemon.heal();
-            pokemon.removeHeldItem();
-            String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
-            Component chatMessage = Component.literal(
-                    CobbleHardcoreMonConfig.SERVER_CONFIG.messages_totemConsumed.get()
-                            .replace("{pokemon}", pokemonName)
-            ).withStyle(ChatFormatting.GOLD);
-            serverPlayer.sendSystemMessage(chatMessage);
-            new SoundsPlayer(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value()).play(serverPlayer);
-            return true;
+        try {
+            if (pokemon.heldItem().is(CobbleHardcoreMonConfig.getTotemItem())) {
+                pokemon.heal();
+                pokemon.removeHeldItem();
+                String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
+                Component chatMessage = Component.literal(
+                        CobbleHardcoreMonConfig.SERVER_CONFIG.messages_totemConsumed.get()
+                                .replace("{pokemon}", pokemonName)
+                ).withStyle(ChatFormatting.GOLD);
+                serverPlayer.sendSystemMessage(chatMessage);
+                new SoundsPlayer(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value()).play(serverPlayer);
+                return true;
+            }
+        } catch (Exception e) {
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to pop Totem for Pokemon: " + e.getMessage(), e);
         }
         return false;
     }
 
     public void alertPlayerAndRemovedPokemon(Pokemon pokemon) {
-        if (partyStore.remove(pokemon)) {
-            String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
-            Component chatMessage = Component.literal(
-                    CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
-                            .replace("{pokemon}", pokemonName)
-            ).withStyle(ChatFormatting.RED);
-            serverPlayer.sendSystemMessage(chatMessage);
-        } else {
-            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " +
-                    pokemon.getDisplayName(false).getString());
+        try {
+            if (partyStore.remove(pokemon)) {
+                String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
+                Component chatMessage = Component.literal(
+                        CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
+                                .replace("{pokemon}", pokemonName)
+                ).withStyle(ChatFormatting.RED);
+                serverPlayer.sendSystemMessage(chatMessage);
+            } else {
+                CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " +
+                        pokemon.getDisplayName(false).getString());
+            }
+        } catch (Exception e) {
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to send fainted Pokemon removal message to player: " + e.getMessage(), e);
         }
     }
 }
