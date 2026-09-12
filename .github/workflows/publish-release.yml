@@ -28,7 +28,7 @@ jobs:
       fabric_loader_version: "0.17.2+"
       neoforge_loader_version: "21.1.182+"
       modrinth_game_version: "1.21.1"
-      modrinth_id: "xxxxxxx"
+      modrinth_id: "VqvNhP9x"
       modrinth_dependencies: |-
         [
           {"project_id":"MdwFAVRL","dependency_type":"required"},
