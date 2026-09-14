@@ -1,10 +1,11 @@
 package dev.matthiesen.cobblehardcoremon.common;
 
+import com.cobblemon.mod.common.api.events.CobblemonEvents;
+import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerBattles;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerPokeParty;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
-import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
 import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,10 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     private boolean isServerRunning = false;
 
+    public boolean isServerRunning() {
+        return isServerRunning;
+    }
+
     public void initialize() {
         super.initialize();
 
@@ -32,14 +37,13 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
         PlatformEvents.SERVER_STARTED.subscribe(server -> isServerRunning = true);
         PlatformEvents.SERVER_STOPPING.subscribe(server -> isServerRunning = false);
-        PlatformEvents.PLAYER_END_TICK.subscribe(this::handlePlayerTick);
+        PlatformEvents.PLAYER_END_TICK.subscribe(PlayerPokeParty::handlePlayerTick);
+
+        CobblemonEvents.BATTLE_STARTED_POST.subscribe(PlayerBattles::battleStartedPost);
+        CobblemonEvents.BATTLE_FAINTED.subscribe(PlayerBattles::battlePokemonFainted);
+        CobblemonEvents.BATTLE_VICTORY.subscribe(PlayerBattles::battleVictory);
+        CobblemonEvents.BATTLE_FLED.subscribe(PlayerBattles::battleFled);
 
         createInfoLog("Initialized");
-    }
-
-    public void handlePlayerTick(PlayerEvent.EndTick event) {
-        if (!isServerRunning) return; // Only run this logic when the server is running
-        if (!(event.player().tickCount % 20 == 0)) return; // Only check every second to reduce performance impact
-        PlayerPokeParty.tick(event.player());
     }
 }
