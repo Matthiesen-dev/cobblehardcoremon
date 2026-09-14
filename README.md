@@ -12,6 +12,9 @@ to revive your fainted Cobblemon, this mod introduces a permanent consequence fo
 (By default, Totems are Minecraft's "Totem of Undying", but this can be configured in the mod's settings), it will be permanently removed from your party. 
 This adds a layer of strategy and risk to your battles as well as when your adventuring in your world, making every decision count.
 
+**W's Permadeath**: This mod was inspired by the Author of [W's Permadeath](https://modrinth.com/datapack/ws-permadeath) datapack. 
+This mod is an implementation of the same concept, but as a mod, it allows for more flexibility and customization via the mod's configuration settings.
+
 ## Requirements
 
 - [Matthiesen Core](https://modrinth.com/mod/matthiesen-core)
