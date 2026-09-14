@@ -24,6 +24,10 @@ public final class CobbleHardcoreMonConfig {
 
         public ModConfigSpec.ConfigValue<String> totemItemId;
 
+        public ModConfigSpec.BooleanValue battles_trackPlayerBattles;
+        public ModConfigSpec.BooleanValue battles_trackNPCBattles;
+        public ModConfigSpec.BooleanValue battles_trackWildBattles;
+
         public ModConfigSpec.ConfigValue<String> messages_totemConsumed;
         public ModConfigSpec.ConfigValue<String> messages_pokemonRemoved;
 
@@ -32,6 +36,16 @@ public final class CobbleHardcoreMonConfig {
 
             totemItemId = builder.comment("The item ID of the Totem item that prevents a Cobblemon from being lost when it faints.")
                     .define("totemItemId", "minecraft:totem_of_undying");
+
+            builder.comment("Battle tracking configuration. These settings determine which types of battles are tracked for Cobblemon fainting events.")
+                    .push("battles");
+            battles_trackPlayerBattles = builder.comment("Whether to track player battles.")
+                    .define("trackPlayerBattles", true);
+            battles_trackNPCBattles = builder.comment("Whether to track NPC battles.")
+                    .define("trackNPCBattles", true);
+            battles_trackWildBattles = builder.comment("Whether to track wild battles.")
+                    .define("trackWildBattles", true);
+            builder.pop(); // battles
 
             builder.comment("Messages displayed to the player when a Cobblemon faints and is removed from their party. You can use {pokemon} as a placeholder for the Pokemon's name.")
                     .push("messages");

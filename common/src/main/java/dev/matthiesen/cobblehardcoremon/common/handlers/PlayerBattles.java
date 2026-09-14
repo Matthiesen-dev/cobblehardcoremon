@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.PlayerExtensionsKt;
+import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -21,8 +22,15 @@ import java.util.UUID;
 public final class PlayerBattles {
     public static final Map<UUID, Map<UUID, Set<UUID>>> trackedBattles = new HashMap<>();
 
+    public static boolean battleTypeDisabled(PokemonBattle battle) {
+        if (battle.isPvW() && !CobbleHardcoreMonConfig.SERVER_CONFIG.battles_trackWildBattles.get()) return true;
+        if (battle.isPvN() && !CobbleHardcoreMonConfig.SERVER_CONFIG.battles_trackNPCBattles.get()) return true;
+        return battle.isPvP() && !CobbleHardcoreMonConfig.SERVER_CONFIG.battles_trackPlayerBattles.get();
+    }
+
     public static void battleStartedPost(BattleStartedEvent.Post event) {
         PokemonBattle battle = event.getBattle();
+        if (battleTypeDisabled(battle)) return;
         Map<UUID, Set<UUID>> faintedPokemonByPlayer = new HashMap<>();
 
         for (ServerPlayer player : battle.getPlayers()) {
@@ -34,6 +42,7 @@ public final class PlayerBattles {
 
     public static void battlePokemonFainted(BattleFaintedEvent event) {
         PokemonBattle battle = event.getBattle();
+        if (battleTypeDisabled(battle)) return;
         BattlePokemon faintedPokemon = event.getKilled();
 
         Map<UUID, Set<UUID>> trackedBattle = trackedBattles.get(battle.getBattleId());
@@ -57,6 +66,7 @@ public final class PlayerBattles {
     }
 
     private static void resolveTrackedBattle(PokemonBattle battle) {
+        if (battleTypeDisabled(battle)) return;
         Map<UUID, Set<UUID>> trackedBattle = trackedBattles.remove(battle.getBattleId());
         if (trackedBattle == null) {
             return;
