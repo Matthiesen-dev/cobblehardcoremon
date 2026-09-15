@@ -34,6 +34,7 @@ repositories {
             excludeGroup("dev.matthiesen")
         }
     }
+    maven("https://maven.cobbled-creators.org/releases/")
     maven("https://artefacts.cobblemon.com/releases/")
     maven("https://repo.spongepowered.org/repository/maven-public")
     maven("https://maven.matthiesen.dev/releases") {
