@@ -37,6 +37,10 @@
   "cobblehardcoremon.configuration.permissions.commands.hardcoremon.tooltip": "Permission level required to execute the /hardcoremon command. This command allows players to manage their Cobblemon health link settings and view their party status.",
   "cobblehardcoremon.configuration.permissions.commands.setHealthLink": "Health Link Command Permission Level",
   "cobblehardcoremon.configuration.permissions.commands.setHealthLink.tooltip": "Permission level required to execute the /hardcoremon setHealthLink command. This command allows players to toggle the health link feature for their own party.",
+  "cobblehardcoremon.configuration.permissions.commands.getHealthLink": "Get Health Link Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.getHealthLink.tooltip": "Permission level required to execute the /hardcoremon getHealthLink command. This command allows players to view the health link status of their own party.",
+  "cobblehardcoremon.configuration.permissions.commands.getHealthLinkOther": "Get Health Link Other Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.getHealthLinkOther.tooltip": "Permission level required to execute the /hardcoremon getHealthLink <player> command. This command allows players to view the health link status of another player's party.",
   "cobblehardcoremon.configuration.permissions.commands.forceHealthLink": "Force Health Link Command Permission Level",
   "cobblehardcoremon.configuration.permissions.commands.forceHealthLink.tooltip": "Permission level required to execute the /hardcoremon forceHealthLink command. This command allows players to force the health link feature for another player's party."
 }
