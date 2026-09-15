@@ -63,6 +63,8 @@ public final class MolangExt {
                 }
             });
 
+            // TODO: Add Soul Link functions, probably only for getting the information, and not setting.
+
             return map;
         }
 

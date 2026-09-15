@@ -3,6 +3,7 @@ package dev.matthiesen.cobblehardcoremon.common.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblehardcoremon.common.commands.subcommands.HealthLinkCommands;
+import dev.matthiesen.cobblehardcoremon.common.commands.subcommands.SoulLinkCommands;
 import dev.matthiesen.cobblehardcoremon.common.registry.PermissionsRegistry;
 import dev.matthiesen.matthiesen_core.common.api.command.CoreCommand;
 import dev.matthiesen.matthiesen_core.common.utility.chat.ChatTableBuilder;
@@ -23,7 +24,8 @@ public final class CobbleHardcoreMonCommands implements CoreCommand {
                 .then(HealthLinkCommands.SET_HEALTH_LINK)
                 .then(HealthLinkCommands.GET_HEALTH_LINK)
                 .then(HealthLinkCommands.FORCE_HEALTH_LINK)
-                .then(HealthLinkCommands.GET_HEALTH_LINK_OTHER);
+                .then(HealthLinkCommands.GET_HEALTH_LINK_OTHER)
+                .then(SoulLinkCommands.ROOT);
 
         commandDispatcher.register(rootCommand.build());
     }
@@ -33,6 +35,7 @@ public final class CobbleHardcoreMonCommands implements CoreCommand {
             ChatTableBuilder helpTable = new ChatTableBuilder("CobbleHardcoreMon Commands");
 
             HealthLinkCommands.appendHelpInfo(helpTable, ctx);
+            SoulLinkCommands.appendHelpInfo(helpTable, ctx);
 
             if (helpTable.getEntryCount() == 0) {
                 helpTable.addRow("No commands available", "You do not have permission to use any commands.");

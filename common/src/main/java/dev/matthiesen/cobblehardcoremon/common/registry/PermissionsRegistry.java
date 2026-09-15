@@ -30,6 +30,26 @@ public final class PermissionsRegistry {
             "command.hardcoremon.get-health-link-other",
             CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_getHealthLinkOther.get()
     );
+    public static Permission COMMAND_SOULLINK_PERMISSION = register(
+            "command.hardcoremon.soul-link",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_soulLink.get()
+    );
+    public static Permission COMMAND_SOULLINK_INVITE_PERMISSION = register(
+            "command.hardcoremon.soul-link.invite",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_soulLink_invite.get()
+    );
+    public static Permission COMMAND_SOULLINK_ACCEPT_PERMISSION = register(
+            "command.hardcoremon.soul-link.accept",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_soulLink_accept.get()
+    );
+    public static Permission COMMAND_SOULLINK_DECLINE_PERMISSION = register(
+            "command.hardcoremon.soul-link.decline",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_soulLink_decline.get()
+    );
+    public static Permission COMMAND_SOULLINK_REMOVE_PERMISSION = register(
+            "command.hardcoremon.soul-link.remove",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_soulLink_remove.get()
+    );
 
     public static void init() {}
 
