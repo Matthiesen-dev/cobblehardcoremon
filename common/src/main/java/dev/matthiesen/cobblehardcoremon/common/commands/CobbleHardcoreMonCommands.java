@@ -32,6 +32,10 @@ public final class CobbleHardcoreMonCommands implements CoreCommand {
 
             HealthLinkCommands.appendHelpInfo(helpTable, ctx);
 
+            if (helpTable.getEntryCount() == 0) {
+                helpTable.addRow("No commands available", "You do not have permission to use any commands.");
+            }
+
             ctx.getSource().sendSystemMessage(helpTable.build());
             return 1;
         } catch (Exception e) {
