@@ -2,6 +2,7 @@ package dev.matthiesen.cobblehardcoremon.common.data;
 
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
 import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
+import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -72,8 +73,19 @@ public final class PlayerData extends SavedData {
 
     public static PlayerDataEntry getPlayerDataEntry(UUID uuid) {
         PlayerData playerData = getPlayerData();
-        return playerData.playerDataMap.computeIfAbsent(uuid, k ->
-                new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()));
+        PlayerDataEntry data = playerData.playerDataMap.get(uuid);
+        if (data == null) {
+            data = new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean());
+            playerData.playerDataMap.put(uuid, data);
+            playerData.setDirty();
+        }
+        return data;
+    }
+
+    public static void onPlayerLogin(PlayerEvent.Join event) {
+        UUID playerUUID = event.player().getUUID();
+        // Ensure that the player has an entry in the player data map
+        getPlayerDataEntry(playerUUID);
     }
 
     public static void setPlayerDataEntry(UUID uuid, PlayerDataEntry entry) {
