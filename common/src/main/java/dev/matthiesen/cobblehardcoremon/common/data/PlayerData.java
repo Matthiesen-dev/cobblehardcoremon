@@ -60,7 +60,6 @@ public final class PlayerData extends SavedData {
         playerData.setDirty();
     }
 
-    // TODO: Implement a way to set the health link value, likely via command.
     public static void setHealthLinkEnabled(UUID uuid, boolean enabled) {
         if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) {
             // If the global health link is enabled, we don't allow individual players to change their setting.
