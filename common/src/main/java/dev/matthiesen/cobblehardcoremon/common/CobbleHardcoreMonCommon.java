@@ -27,6 +27,10 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
         return new ResourceLocation(MOD_ID, path);
     }
 
+    public String modConfigPath(String path) {
+        return MOD_ID + "/" + path + ".toml";
+    }
+
     @Override
     public @Token @NotNull String getMetricsToken() {
         return METRICS_TOKEN;
@@ -41,8 +45,8 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
     public void initialize() {
         super.initialize();
 
-        registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC);
-        registerModConfig(MOD_ID, ModConfigType.STARTUP, CobbleHardcoreMonConfig.PERMISSIONS_SPEC, MOD_ID + "-permissions.toml");
+        registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC, modConfigPath("server"));
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, CobbleHardcoreMonConfig.PERMISSIONS_SPEC, modConfigPath("permissions"));
 
         PlatformEvents.SERVER_STARTED.subscribe(server -> isServerRunning = true);
         PlatformEvents.SERVER_STOPPING.subscribe(server -> isServerRunning = false);

@@ -35,10 +35,12 @@ public final class CobbleHardcoreMonCommands implements CoreCommand {
         commandDispatcher.register(rootCommand.build());
     }
 
+    // TODO: Implement the actual command logic for this commands
     public int healthLinkSelf(CommandContext<CommandSourceStack> ctx) {
         return 1;
     }
 
+    // TODO: Implement the actual command logic for this commands
     public int forceHealthLinkOther(CommandContext<CommandSourceStack> ctx) {
         return 1;
     }
