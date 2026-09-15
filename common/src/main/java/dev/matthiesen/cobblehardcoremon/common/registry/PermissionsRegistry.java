@@ -7,6 +7,8 @@ import dev.matthiesen.matthiesen_core.common.api.permissions.PermissionLevel;
 import dev.matthiesen.matthiesen_core.common.utility.AbstractPermission;
 import net.minecraft.commands.CommandSourceStack;
 
+import java.util.List;
+
 public final class PermissionsRegistry {
     public static Permission COMMAND_ROOT_PERMISSION = register(
             "command.hardcoremon",
@@ -25,6 +27,15 @@ public final class PermissionsRegistry {
 
     public static boolean checkPermission(CommandSourceStack source, Permission permission) {
         return CobbleHardcoreMonCommon.INSTANCE.getPermissionsManager().getPermissionValidator().hasPermission(source, permission);
+    }
+
+    public static boolean hasAnyPermission(List<Boolean> permissions) {
+        for (boolean permission : permissions) {
+            if (permission) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("SameParameterValue")
