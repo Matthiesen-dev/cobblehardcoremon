@@ -1,7 +1,7 @@
 package dev.matthiesen.cobblehardcoremon.common.data;
 
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
-import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonConfig;
+import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;

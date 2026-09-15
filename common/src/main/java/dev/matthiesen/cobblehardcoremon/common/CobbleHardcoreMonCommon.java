@@ -1,8 +1,11 @@
 package dev.matthiesen.cobblehardcoremon.common;
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
+import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
+import dev.matthiesen.cobblehardcoremon.common.registry.CommandRegistry;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerBattles;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerPokeParty;
+import dev.matthiesen.cobblehardcoremon.common.registry.PermissionsRegistry;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
@@ -39,6 +42,7 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
         super.initialize();
 
         registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC);
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, CobbleHardcoreMonConfig.PERMISSIONS_SPEC, MOD_ID + "-permissions.toml");
 
         PlatformEvents.SERVER_STARTED.subscribe(server -> isServerRunning = true);
         PlatformEvents.SERVER_STOPPING.subscribe(server -> isServerRunning = false);
@@ -48,6 +52,9 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
         CobblemonEvents.BATTLE_FAINTED.subscribe(PlayerBattles::battlePokemonFainted);
         CobblemonEvents.BATTLE_VICTORY.subscribe(PlayerBattles::battleVictory);
         CobblemonEvents.BATTLE_FLED.subscribe(PlayerBattles::battleFled);
+
+        PermissionsRegistry.init();
+        CommandRegistry.init();
 
         createInfoLog("Initialized");
     }
