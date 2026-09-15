@@ -52,6 +52,25 @@ public final class PlayerData extends SavedData {
         return playerData.playerDataMap.get(uuid);
     }
 
+    public static void setPlayerDataEntry(UUID uuid, PlayerDataEntry entry) {
+        PlayerData playerData = getPlayerData();
+        playerData.playerDataMap.put(uuid, entry);
+        playerData.setDirty();
+    }
+
+    // TODO: Implement a way to set the health link value, likely via command.
+    public static void setHealthLinkEnabled(UUID uuid, boolean enabled) {
+        PlayerDataEntry entry = getPlayerDataEntry(uuid);
+        // This is a bit redundant, but it ensures that we always create a new entry if one doesn't exist, and updates the existing entry if it does.
+        // In the future this will allow multiple values to be stored in the PlayerDataEntry, so we can just update the healthLinkEnabled value without overwriting other values.
+        if (entry == null) {
+            entry = new PlayerDataEntry(enabled);
+        } else {
+            entry = new PlayerDataEntry(enabled);
+        }
+        setPlayerDataEntry(uuid, entry);
+    }
+
     public record PlayerDataEntry(
             boolean healthLinkEnabled
     ) {
