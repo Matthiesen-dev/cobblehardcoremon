@@ -4,7 +4,9 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.PlayerExtensionsKt;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
-import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonConfig;
+import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
+import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
+import dev.matthiesen.cobblehardcoremon.common.data.PlayerDataEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
@@ -36,7 +38,7 @@ public final class PlayerPokeParty {
                 Pokemon faintedPokemon = partyEntry.pokemon();
                 // Check if the player is not in battle and not busy (e.g., in a menu) before attempting to remove the fainted Pokemon
                 // We check to verify the player is not in battle or busy to avoid weird race conditions with Cobblemon's battle system and party management.
-                if (faintedPokemon != null && !playerInstance.isPlayerBusy(serverPlayer)) {
+                if (faintedPokemon != null && playerInstance.playerIsBusy(serverPlayer)) {
                     // Check if the player's Pokemon has a Totem item and if the cooldown has expired
                     if (playerInstance.popPokemonTotem(faintedPokemon)) {
                         // If the Totem was consumed, we can skip the removal process
@@ -56,6 +58,18 @@ public final class PlayerPokeParty {
                 }
             }
         }
+
+        // Update the player's max health based on their current party size if HealthLink is enabled
+        if (hasHealthLinkEnabled(serverPlayer) && playerInstance.playerIsBusy(serverPlayer)) {
+            HealthLink.overridePlayerMaxHealth(serverPlayer);
+        }
+    }
+
+    public static boolean hasHealthLinkEnabled(ServerPlayer player) {
+        // If the global health link is enabled, all players have it enabled by default
+        if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) return true;
+        PlayerDataEntry entry = PlayerData.getPlayerDataEntry(player.getUUID());
+        return entry != null && entry.healthLinkEnabled();
     }
 
     private final ServerPlayer serverPlayer;
@@ -66,8 +80,8 @@ public final class PlayerPokeParty {
         this.partyStore = PlayerExtensionsKt.party(serverPlayer);
     }
 
-    public boolean isPlayerBusy(ServerPlayer serverPlayer) {
-        return PlayerExtensionsKt.isPartyBusy(serverPlayer) || PlayerExtensionsKt.isInBattle(serverPlayer);
+    public boolean playerIsBusy(ServerPlayer serverPlayer) {
+        return !PlayerExtensionsKt.isPartyBusy(serverPlayer) && !PlayerExtensionsKt.isInBattle(serverPlayer);
     }
 
     public Map<PokePartySlot, PartyEntry> getPlayerPartyStatus() {
@@ -87,6 +101,22 @@ public final class PlayerPokeParty {
         } catch (Exception e) {
             CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to retrieve player party status: " + e.getMessage(), e);
             return new HashMap<>();
+        }
+    }
+
+    public int getLivingPokemonCount() {
+        try {
+            int count = 0;
+            for (int i = 0; i < PokePartySlot.getMaxSlots(); i++) {
+                Pokemon partyPokemon = partyStore.get(i);
+                if (partyPokemon != null && !partyPokemon.isFainted()) {
+                    count++;
+                }
+            }
+            return count;
+        } catch (Exception e) {
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to count living Pokemon in player party: " + e.getMessage(), e);
+            return 0;
         }
     }
 

@@ -15,6 +15,14 @@ This adds a layer of strategy and risk to your battles as well as when your adve
 **W's Permadeath**: This mod was inspired by the Author of [W's Permadeath](https://modrinth.com/datapack/ws-permadeath) datapack. 
 This mod is an implementation of the same concept, but as a mod, it allows for more flexibility and customization via the mod's configuration settings.
 
+## Features
+
+- **Hardcore Mode**: If a Cobblemon faints and is not holding a Totem, it will be permanently removed from the player's party.
+- **Health Link** (Optional): Set's the player's maximum hearts to the number of Cobblemon in their party.
+- **Soul Link** (NYI): Lets two players link their parties together, so that if one player's Cobblemon faints, the other player's corresponding Cobblemon will also faint.
+
+> Note: Soul Link is not yet implemented, but will be in a future update.
+
 ## Requirements
 
 - [Matthiesen Core](https://modrinth.com/mod/matthiesen-core)
@@ -28,9 +36,10 @@ Documentation for this mod can be found at [mods.matthiesen.dev](https://mods.ma
 
 ## Version Compatibility
 
-| Minecraft Version | Matthiesen Core Version | Cobblemon Version | Mod Version |
-|-------------------|-------------------------|-------------------|-------------|
-| 1.21.1            | 1.2.7+                  | 1.8.0             | 1.x.x       |
+| Minecraft Version | Matthiesen Core Version | Cobblemon Version | Mod Version   |
+|-------------------|-------------------------|-------------------|---------------|
+| 1.21.1            | 1.2.7+                  | 1.8.0             | 1.0.0-beta.1+ |
+| 1.21.1            | 1.2.10+                 | 1.8.0             | 1.0.0-beta.4+ |
 
 ## FastStats Metrics
 

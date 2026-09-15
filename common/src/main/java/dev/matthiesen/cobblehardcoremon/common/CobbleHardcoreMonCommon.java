@@ -1,12 +1,16 @@
 package dev.matthiesen.cobblehardcoremon.common;
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
+import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
+import dev.matthiesen.cobblehardcoremon.common.registry.CommandRegistry;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerBattles;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerPokeParty;
+import dev.matthiesen.cobblehardcoremon.common.registry.PermissionsRegistry;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
 import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
@@ -17,6 +21,14 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     public CobbleHardcoreMonCommon() {
         super(MOD_ID, MOD_NAME);
+    }
+
+    public static ResourceLocation modResource(String path) {
+        return new ResourceLocation(MOD_ID, path);
+    }
+
+    public String modConfigPath(String path) {
+        return MOD_ID + "/" + path + ".toml";
     }
 
     @Override
@@ -33,7 +45,8 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
     public void initialize() {
         super.initialize();
 
-        registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC);
+        registerModConfig(MOD_ID, ModConfigType.SERVER, CobbleHardcoreMonConfig.SERVER_SPEC, modConfigPath("server"));
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, CobbleHardcoreMonConfig.PERMISSIONS_SPEC, modConfigPath("permissions"));
 
         PlatformEvents.SERVER_STARTED.subscribe(server -> isServerRunning = true);
         PlatformEvents.SERVER_STOPPING.subscribe(server -> isServerRunning = false);
@@ -43,6 +56,9 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
         CobblemonEvents.BATTLE_FAINTED.subscribe(PlayerBattles::battlePokemonFainted);
         CobblemonEvents.BATTLE_VICTORY.subscribe(PlayerBattles::battleVictory);
         CobblemonEvents.BATTLE_FLED.subscribe(PlayerBattles::battleFled);
+
+        PermissionsRegistry.init();
+        CommandRegistry.init();
 
         createInfoLog("Initialized");
     }
