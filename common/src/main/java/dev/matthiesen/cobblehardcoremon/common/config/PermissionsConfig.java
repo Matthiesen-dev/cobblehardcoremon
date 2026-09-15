@@ -9,6 +9,11 @@ public final class PermissionsConfig {
     public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_getHealthLink;
     public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_forceHealthLink;
     public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_getHealthLinkOther;
+    public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_soulLink;
+    public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_soulLink_invite;
+    public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_soulLink_accept;
+    public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_soulLink_decline;
+    public ModConfigSpec.EnumValue<PermissionLevel> command_hardcoremon_soulLink_remove;
 
     public PermissionsConfig(ModConfigSpec.Builder builder) {
         builder.comment("Permissions configuration for CobbleHardcoreMon mod")
@@ -37,6 +42,26 @@ public final class PermissionsConfig {
         command_hardcoremon_getHealthLinkOther = builder.comment("The permission level required to use the /hardcoremon getHealthLink <player> command.")
                 .translation("cobblehardcoremon.configuration.permissions.commands.getHealthLinkOther")
                 .defineEnum("getHealthLinkOther", PermissionLevel.ALL_COMMANDS);
+
+        command_hardcoremon_soulLink = builder.comment("The permission level required to use the /hardcoremon soulLink command.")
+                .translation("cobblehardcoremon.configuration.permissions.commands.soulLink")
+                .defineEnum("soulLink", PermissionLevel.NONE);
+
+        command_hardcoremon_soulLink_invite = builder.comment("The permission level required to use the /hardcoremon soulLink invite command.")
+                .translation("cobblehardcoremon.configuration.permissions.commands.soulLinkInvite")
+                .defineEnum("soulLinkInvite", PermissionLevel.NONE);
+
+        command_hardcoremon_soulLink_accept = builder.comment("The permission level required to use the /hardcoremon soulLink accept command.")
+                .translation("cobblehardcoremon.configuration.permissions.commands.soulLinkAccept")
+                .defineEnum("soulLinkAccept", PermissionLevel.NONE);
+
+        command_hardcoremon_soulLink_decline = builder.comment("The permission level required to use the /hardcoremon soulLink decline command.")
+                .translation("cobblehardcoremon.configuration.permissions.commands.soulLinkDecline")
+                .defineEnum("soulLinkDecline", PermissionLevel.NONE);
+
+        command_hardcoremon_soulLink_remove = builder.comment("The permission level required to use the /hardcoremon soulLink remove command.")
+                .translation("cobblehardcoremon.configuration.permissions.commands.soulLinkRemove")
+                .defineEnum("soulLinkRemove", PermissionLevel.NONE);
 
         builder.pop(); // commands
         builder.pop(); // permissions

@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
 import dev.matthiesen.cobblehardcoremon.common.handlers.MolangExt;
+import dev.matthiesen.cobblehardcoremon.common.handlers.SoulLink;
 import dev.matthiesen.cobblehardcoremon.common.registry.CommandRegistry;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerBattles;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerPokeParty;
@@ -52,6 +53,7 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
         PlatformEvents.SERVER_STARTED.subscribe(server -> isServerRunning = true);
         PlatformEvents.SERVER_STOPPING.subscribe(server -> isServerRunning = false);
+        PlatformEvents.SERVER_END_TICK.subscribe(SoulLink::tick);
         PlatformEvents.PLAYER_END_TICK.subscribe(PlayerPokeParty::handlePlayerTick);
         PlatformEvents.PLAYER_JOIN.subscribe(PlayerData::onPlayerLogin);
 

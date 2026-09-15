@@ -69,7 +69,7 @@ public final class PlayerPokeParty {
         // If the global health link is enabled, all players have it enabled by default
         if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) return true;
         PlayerDataEntry entry = PlayerData.getPlayerDataEntry(player.getUUID());
-        return entry != null && entry.healthLinkEnabled();
+        return entry.healthLinkEnabled();
     }
 
     private final ServerPlayer serverPlayer;
@@ -120,6 +120,10 @@ public final class PlayerPokeParty {
         }
     }
 
+    public Pokemon getPokemonInSlot(PokePartySlot slot) {
+        return partyStore.get(slot.getIndex());
+    }
+
     public boolean popPokemonTotem(Pokemon pokemon) {
         try {
             if (pokemon.heldItem().is(CobbleHardcoreMonConfig.getTotemItem())) {
@@ -141,14 +145,31 @@ public final class PlayerPokeParty {
     }
 
     public void alertPlayerAndRemovedPokemon(Pokemon pokemon) {
+        alertPlayerAndRemovedPokemon(pokemon, false, null);
+    }
+
+    public void alertPlayerAndRemovedPokemon(Pokemon pokemon, boolean linkedRemoval, String linkedPlayerName) {
         try {
+            PokePartySlot removedSlot = null;
+            for (PokePartySlot slot : PokePartySlot.values()) {
+                Pokemon slotPokemon = partyStore.get(slot.getIndex());
+                if (slotPokemon != null && slotPokemon.getUuid().equals(pokemon.getUuid())) {
+                    removedSlot = slot;
+                    break;
+                }
+            }
             if (partyStore.remove(pokemon)) {
                 String pokemonName = pokemon.getSpecies().getTranslatedName().getString();
-                Component chatMessage = Component.literal(
-                        CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
-                                .replace("{pokemon}", pokemonName)
-                ).withStyle(ChatFormatting.RED);
+                String message = CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
+                        .replace("{pokemon}", pokemonName);
+                if (linkedRemoval && linkedPlayerName != null) {
+                    message += " Soul Link removed this party slot because " + linkedPlayerName + "'s matching slot was lost.";
+                }
+                Component chatMessage = Component.literal(message).withStyle(ChatFormatting.RED);
                 serverPlayer.sendSystemMessage(chatMessage);
+                if (!linkedRemoval && removedSlot != null) {
+                    SoulLink.resolveLinkedSlotRemoval(serverPlayer, removedSlot);
+                }
             } else {
                 CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to remove fainted Pokemon from player party: " +
                         pokemon.getDisplayName(false).getString());

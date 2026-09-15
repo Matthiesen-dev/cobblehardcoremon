@@ -42,5 +42,15 @@
   "cobblehardcoremon.configuration.permissions.commands.getHealthLinkOther": "Get Health Link Other Command Permission Level",
   "cobblehardcoremon.configuration.permissions.commands.getHealthLinkOther.tooltip": "Permission level required to execute the /hardcoremon getHealthLink <player> command. This command allows players to view the health link status of another player's party.",
   "cobblehardcoremon.configuration.permissions.commands.forceHealthLink": "Force Health Link Command Permission Level",
-  "cobblehardcoremon.configuration.permissions.commands.forceHealthLink.tooltip": "Permission level required to execute the /hardcoremon forceHealthLink command. This command allows players to force the health link feature for another player's party."
+  "cobblehardcoremon.configuration.permissions.commands.forceHealthLink.tooltip": "Permission level required to execute the /hardcoremon forceHealthLink command. This command allows players to force the health link feature for another player's party.",
+  "cobblehardcoremon.configuration.permissions.commands.soulLink": "Soul Link Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.soulLink.tooltip": "Permission level required to execute the /hardcoremon soulLink command. This command allows players to inspect their current Soul Link.",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkInvite": "Soul Link Invite Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkInvite.tooltip": "Permission level required to execute the /hardcoremon soulLink invite command. This command allows players to invite another player into a Soul Link.",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkAccept": "Soul Link Accept Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkAccept.tooltip": "Permission level required to execute the /hardcoremon soulLink accept command. This command allows players to accept a pending Soul Link invite.",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkDecline": "Soul Link Decline Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkDecline.tooltip": "Permission level required to execute the /hardcoremon soulLink decline command. This command allows players to decline a pending Soul Link invite.",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkRemove": "Soul Link Remove Command Permission Level",
+  "cobblehardcoremon.configuration.permissions.commands.soulLinkRemove.tooltip": "Permission level required to execute the /hardcoremon soulLink remove command. This command allows players to remove their current Soul Link."
 }

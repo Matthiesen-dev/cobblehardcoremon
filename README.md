@@ -18,11 +18,9 @@ This mod is an implementation of the same concept, but as a mod, it allows for m
 ## Features
 
 - **Hardcore Mode**: If a Cobblemon faints and is not holding a Totem, it will be permanently removed from the player's party.
-- **Health Link** (Optional): Set's the player's maximum hearts to the number of Cobblemon in their party.
-- **Soul Link** (NYI): Lets two players link their parties together, so that if one player's Cobblemon faints, the other player's corresponding Cobblemon will also faint.
+- **Health Link** (Optional): Sets the player's maximum hearts to the number of Cobblemon in their party.
+- **Soul Link** (Optional): Lets two players link their parties together, so that if one player's party slot is lost, the linked player's matching slot is also resolved. Linked removals respect the partner Cobblemon's Totem first.
 - **Cobblemon Molang Extensions**: Adds new Molang functions to Cobblemon's Molang system, allowing for more complex and dynamic behaviors and interactions with Cobblemon NPCs.
-
-> Note: Soul Link is not yet implemented, but will be in a future update.
 
 ## Requirements
 
