@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.util.PlayerExtensionsKt;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
 import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
+import dev.matthiesen.cobblehardcoremon.common.data.PlayerDataEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
@@ -67,7 +68,7 @@ public final class PlayerPokeParty {
     public static boolean hasHealthLinkEnabled(ServerPlayer player) {
         // If the global health link is enabled, all players have it enabled by default
         if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) return true;
-        PlayerData.PlayerDataEntry entry = PlayerData.getPlayerDataEntry(player.getUUID());
+        PlayerDataEntry entry = PlayerData.getPlayerDataEntry(player.getUUID());
         return entry != null && entry.healthLinkEnabled();
     }
 

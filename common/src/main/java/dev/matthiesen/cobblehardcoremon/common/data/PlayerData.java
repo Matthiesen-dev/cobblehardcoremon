@@ -15,7 +15,7 @@ public final class PlayerData extends SavedData {
     public static final String PLAYER_DATA_KEY = "playerData";
     public static final String SOUL_LINK_DATA_KEY = "soulLinkData";
     public final Map<UUID, PlayerDataEntry> playerDataMap = new HashMap<>();
-    public final Map<UUID, SoulLinkData> soulLinkDataMap = new HashMap<>();
+    public final Map<UUID, SoulLinkDataEntry> soulLinkDataMap = new HashMap<>();
 
     @Override
     public @NotNull CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
@@ -28,7 +28,7 @@ public final class PlayerData extends SavedData {
 
         // Soul link data
         CompoundTag soulLinkDataTag = new CompoundTag();
-        for (Map.Entry<UUID, SoulLinkData> entry : soulLinkDataMap.entrySet()) {
+        for (Map.Entry<UUID, SoulLinkDataEntry> entry : soulLinkDataMap.entrySet()) {
             soulLinkDataTag.put(entry.getKey().toString(), entry.getValue().toCompoundTag());
         }
         compoundTag.put(SOUL_LINK_DATA_KEY, soulLinkDataTag);
@@ -51,7 +51,7 @@ public final class PlayerData extends SavedData {
         CompoundTag soulLinkDataTag = compoundTag.getCompound(SOUL_LINK_DATA_KEY);
         for (String key : soulLinkDataTag.getAllKeys()) {
             UUID uuid = UUID.fromString(key);
-            SoulLinkData entry = SoulLinkData.fromCompoundTag(soulLinkDataTag.getCompound(key));
+            SoulLinkDataEntry entry = SoulLinkDataEntry.fromCompoundTag(soulLinkDataTag.getCompound(key));
             playerData.soulLinkDataMap.put(uuid, entry);
         }
 
@@ -73,7 +73,7 @@ public final class PlayerData extends SavedData {
     public static PlayerDataEntry getPlayerDataEntry(UUID uuid) {
         PlayerData playerData = getPlayerData();
         return playerData.playerDataMap.computeIfAbsent(uuid, k ->
-                new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()));
+                new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean(), false));
     }
 
     public static void setPlayerDataEntry(UUID uuid, PlayerDataEntry entry) {
@@ -92,47 +92,15 @@ public final class PlayerData extends SavedData {
         setPlayerDataEntry(uuid, entry);
     }
 
-    public static class PlayerDataEntry {
-        public static final String HEALTH_LINK_ENABLED_KEY = "healthLinkEnabled";
-
-        public CompoundTag toCompoundTag() {
-            CompoundTag tag = new CompoundTag();
-            tag.putBoolean(HEALTH_LINK_ENABLED_KEY, healthLinkEnabled);
-            return tag;
-        }
-
-        public static PlayerDataEntry fromCompoundTag(CompoundTag tag) {
-            boolean healthLinkEnabled = tag.getBoolean(HEALTH_LINK_ENABLED_KEY);
-            return new PlayerDataEntry(healthLinkEnabled);
-        }
-
-        private boolean healthLinkEnabled;
-
-        public PlayerDataEntry(boolean healthLinkEnabled) {
-            this.healthLinkEnabled = healthLinkEnabled;
-        }
-
-        public boolean healthLinkEnabled() {
-            return healthLinkEnabled;
-        }
-
-        public void setHealthLinkEnabled(boolean enabled) {
-            this.healthLinkEnabled = enabled;
-        }
+    @SuppressWarnings("unused")
+    public static boolean hasSoulLink(UUID uuid) {
+        return getPlayerDataEntry(uuid).hasSoulLink();
     }
 
-    public record SoulLinkData(UUID playerA, UUID playerB) {
-        public CompoundTag toCompoundTag() {
-            CompoundTag tag = new CompoundTag();
-            tag.putUUID("playerA", playerA);
-            tag.putUUID("playerB", playerB);
-            return tag;
-        }
-
-        public static SoulLinkData fromCompoundTag(CompoundTag tag) {
-            UUID playerA = tag.getUUID("playerA");
-            UUID playerB = tag.getUUID("playerB");
-            return new SoulLinkData(playerA, playerB);
-        }
+    @SuppressWarnings("unused")
+    public static void setHasSoulLink(UUID uuid, boolean hasSoulLink) {
+        PlayerDataEntry entry = getPlayerDataEntry(uuid);
+        entry.setHasSoulLink(hasSoulLink);
+        setPlayerDataEntry(uuid, entry);
     }
 }
