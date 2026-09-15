@@ -23,6 +23,7 @@ public final class CobbleHardcoreMonConfig {
     public static class ServerConfig {
 
         public ModConfigSpec.ConfigValue<String> totemItemId;
+        public ModConfigSpec.BooleanValue globalHealthLinkEnabled;
 
         public ModConfigSpec.BooleanValue battles_trackPlayerBattles;
         public ModConfigSpec.BooleanValue battles_trackNPCBattles;
@@ -39,6 +40,9 @@ public final class CobbleHardcoreMonConfig {
             totemItemId = builder.comment("The item ID of the Totem item that prevents a Cobblemon from being lost when it faints.")
                     .translation("cobblehardcoremon.configuration.server.totemItemId")
                     .define("totemItemId", "minecraft:totem_of_undying");
+            globalHealthLinkEnabled = builder.comment("Whether the Health Link feature is enabled by default for all players. If set to false, players can enable it individually in their settings.")
+                    .translation("cobblehardcoremon.configuration.server.globalHealthLinkEnabled")
+                    .define("globalHealthLinkEnabled", false);
 
             builder.comment("Battle tracking configuration. These settings determine which types of battles are tracked for Cobblemon fainting events.")
                     .translation("cobblehardcoremon.configuration.server.battles")

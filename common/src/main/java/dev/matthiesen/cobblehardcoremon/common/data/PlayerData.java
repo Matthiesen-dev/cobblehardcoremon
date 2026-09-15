@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblehardcoremon.common.data;
 
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
+import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonConfig;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -49,7 +50,8 @@ public final class PlayerData extends SavedData {
 
     public static PlayerDataEntry getPlayerDataEntry(UUID uuid) {
         PlayerData playerData = getPlayerData();
-        return playerData.playerDataMap.get(uuid);
+        return playerData.playerDataMap.computeIfAbsent(uuid, k ->
+                new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()));
     }
 
     public static void setPlayerDataEntry(UUID uuid, PlayerDataEntry entry) {
@@ -60,33 +62,42 @@ public final class PlayerData extends SavedData {
 
     // TODO: Implement a way to set the health link value, likely via command.
     public static void setHealthLinkEnabled(UUID uuid, boolean enabled) {
-        PlayerDataEntry entry = getPlayerDataEntry(uuid);
-        // This is a bit redundant, but it ensures that we always create a new entry if one doesn't exist, and updates the existing entry if it does.
-        // In the future this will allow multiple values to be stored in the PlayerDataEntry, so we can just update the healthLinkEnabled value without overwriting other values.
-        if (entry == null) {
-            entry = new PlayerDataEntry(enabled);
-        } else {
-            entry = new PlayerDataEntry(enabled);
+        if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) {
+            // If the global health link is enabled, we don't allow individual players to change their setting.
+            return;
         }
+        PlayerDataEntry entry = getPlayerDataEntry(uuid);
+        entry.setHealthLinkEnabled(enabled);
         setPlayerDataEntry(uuid, entry);
     }
 
-    public record PlayerDataEntry(
-            boolean healthLinkEnabled
-    ) {
+    public static class PlayerDataEntry {
         public static final String HEALTH_LINK_ENABLED_KEY = "healthLinkEnabled";
 
         public CompoundTag toCompoundTag() {
             CompoundTag tag = new CompoundTag();
             tag.putBoolean(HEALTH_LINK_ENABLED_KEY, healthLinkEnabled);
-
             return tag;
         }
 
         public static PlayerDataEntry fromCompoundTag(CompoundTag tag) {
             boolean healthLinkEnabled = tag.getBoolean(HEALTH_LINK_ENABLED_KEY);
-
             return new PlayerDataEntry(healthLinkEnabled);
         }
+
+        private boolean healthLinkEnabled;
+
+        public PlayerDataEntry(boolean healthLinkEnabled) {
+            this.healthLinkEnabled = healthLinkEnabled;
+        }
+
+        public boolean healthLinkEnabled() {
+            return healthLinkEnabled;
+        }
+
+        public void setHealthLinkEnabled(boolean enabled) {
+            this.healthLinkEnabled = enabled;
+        }
     }
+
 }

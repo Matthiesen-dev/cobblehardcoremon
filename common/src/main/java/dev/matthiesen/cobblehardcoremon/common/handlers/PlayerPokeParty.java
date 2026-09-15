@@ -65,6 +65,8 @@ public final class PlayerPokeParty {
     }
 
     public static boolean hasHealthLinkEnabled(ServerPlayer player) {
+        // If the global health link is enabled, all players have it enabled by default
+        if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) return true;
         PlayerData.PlayerDataEntry entry = PlayerData.getPlayerDataEntry(player.getUUID());
         return entry != null && entry.healthLinkEnabled();
     }
