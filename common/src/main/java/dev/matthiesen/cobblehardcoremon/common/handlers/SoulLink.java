@@ -171,13 +171,13 @@ public final class SoulLink {
         Style acceptStyle = Style.EMPTY
                 .withColor(ChatFormatting.GREEN)
                 .withUnderlined(true)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hardcoremon soul-link accept " + sourcePlayer.getUUID()))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hardcoremon soulLink accept " + sourcePlayer.getUUID()))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to accept the Soul Link invite.")));
 
         Style declineStyle = Style.EMPTY
                 .withColor(ChatFormatting.RED)
                 .withUnderlined(true)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hardcoremon soul-link decline " + sourcePlayer.getUUID()))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hardcoremon soulLink decline " + sourcePlayer.getUUID()))
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to decline the Soul Link invite.")));
 
         MutableComponent targetMessage = Component.literal(sourcePlayer.getName().getString() + " has sent you a Soul Link invite. ")

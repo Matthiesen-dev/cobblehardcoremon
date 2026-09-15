@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 public final class SoulLinkCommands {
-    public static final CommandBuilder ROOT = CommandBuilder.create("soul-link")
+    public static final CommandBuilder ROOT = CommandBuilder.create("soulLink")
             .requires(source -> PermissionsRegistry.checkPermission(source, PermissionsRegistry.COMMAND_SOULLINK_PERMISSION))
             .executes(SoulLinkCommands::getSoulLinkSelf)
             .then(CommandBuilder.create("invite")
@@ -47,19 +47,19 @@ public final class SoulLinkCommands {
         }
 
         if (hasRootPermission) {
-            builder.addRow("/hardcoremon soul-link", "Show your current Soul Link status");
+            builder.addRow("/hardcoremon soulLink", "Show your current Soul Link status");
         }
         if (hasInvitePermission) {
-            builder.addRow("/hardcoremon soul-link invite <player>", "Invite another player to Soul Link");
+            builder.addRow("/hardcoremon soulLink invite <player>", "Invite another player to Soul Link");
         }
         if (hasAcceptPermission) {
-            builder.addRow("/hardcoremon soul-link accept <player>", "Accept a pending Soul Link invite");
+            builder.addRow("/hardcoremon soulLink accept <player>", "Accept a pending Soul Link invite");
         }
         if (hasDeclinePermission) {
-            builder.addRow("/hardcoremon soul-link decline <player>", "Decline a pending Soul Link invite");
+            builder.addRow("/hardcoremon soulLink decline <player>", "Decline a pending Soul Link invite");
         }
         if (hasRemovePermission) {
-            builder.addRow("/hardcoremon soul-link remove", "Remove your current Soul Link");
+            builder.addRow("/hardcoremon soulLink remove", "Remove your current Soul Link");
         }
     }
 
