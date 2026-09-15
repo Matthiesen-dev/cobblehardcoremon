@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public final class PlayerDataEntry {
     public static final String HEALTH_LINK_ENABLED_KEY = "healthLinkEnabled";
-    public static final String SOUL_LINKED_PLAYER_UUID_KEY = "soulLinkedPlayerUUID";
+    public static final String SOUL_LINKED_MAP_UUID_KEY = "soulLinkMapUUID";
 
     private boolean healthLinkEnabled;
     private UUID soulLinkMapUUID;
@@ -23,7 +23,7 @@ public final class PlayerDataEntry {
 
     public static PlayerDataEntry fromCompoundTag(CompoundTag tag) {
         boolean healthLinkEnabled = tag.getBoolean(HEALTH_LINK_ENABLED_KEY);
-        UUID soulLinkedPlayerUUID = tag.contains(SOUL_LINKED_PLAYER_UUID_KEY) ? UUID.fromString(tag.getString(SOUL_LINKED_PLAYER_UUID_KEY)) : null;
+        UUID soulLinkedPlayerUUID = tag.contains(SOUL_LINKED_MAP_UUID_KEY) ? UUID.fromString(tag.getString(SOUL_LINKED_MAP_UUID_KEY)) : null;
         return new PlayerDataEntry(healthLinkEnabled, soulLinkedPlayerUUID);
     }
 
@@ -31,7 +31,7 @@ public final class PlayerDataEntry {
         CompoundTag tag = new CompoundTag();
         tag.putBoolean(HEALTH_LINK_ENABLED_KEY, healthLinkEnabled);
         if (soulLinkMapUUID != null) {
-            tag.putString(SOUL_LINKED_PLAYER_UUID_KEY, soulLinkMapUUID.toString());
+            tag.putString(SOUL_LINKED_MAP_UUID_KEY, soulLinkMapUUID.toString());
         }
         return tag;
     }
