@@ -12,6 +12,14 @@ public final class PermissionsRegistry {
             "command.hardcoremon",
             CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon.get()
     );
+    public static Permission COMMAND_SETHEALTHLINK_PERMISSION = register(
+            "command.hardcoremon.set-health-link",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_setHealthLink.get()
+    );
+    public static Permission COMMAND_FORCEHEALTHLINK_PERMISSION = register(
+            "command.hardcoremon.force-health-link",
+            CobbleHardcoreMonConfig.PERMISSIONS_CONFIG.command_hardcoremon_forceHealthLink.get()
+    );
 
     public static void init() {}
 
