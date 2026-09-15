@@ -73,7 +73,7 @@ public final class PlayerData extends SavedData {
     public static PlayerDataEntry getPlayerDataEntry(UUID uuid) {
         PlayerData playerData = getPlayerData();
         return playerData.playerDataMap.computeIfAbsent(uuid, k ->
-                new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean(), false));
+                new PlayerDataEntry(CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()));
     }
 
     public static void setPlayerDataEntry(UUID uuid, PlayerDataEntry entry) {
@@ -93,14 +93,27 @@ public final class PlayerData extends SavedData {
     }
 
     @SuppressWarnings("unused")
-    public static boolean hasSoulLink(UUID uuid) {
-        return getPlayerDataEntry(uuid).hasSoulLink();
-    }
+    public static SoulLinkDataEntry getSoulLinkByPlayerUUID(UUID playerUUID) {
+        PlayerData playerData = getPlayerData();
+        // try to get the soul link directly from player first
+        var playerDataEntry = getPlayerDataEntry(playerUUID);
+        var soulLinkMapUUID = playerDataEntry.getSoulLinkMapUUID();
+        if (soulLinkMapUUID != null) {
+            var entry = playerData.soulLinkDataMap.get(soulLinkMapUUID);
+            if (entry != null) {
+                return entry;
+            }
+        }
 
-    @SuppressWarnings("unused")
-    public static void setHasSoulLink(UUID uuid, boolean hasSoulLink) {
-        PlayerDataEntry entry = getPlayerDataEntry(uuid);
-        entry.setHasSoulLink(hasSoulLink);
-        setPlayerDataEntry(uuid, entry);
+        // if not found, iterate through all soul links to find one that contains the player
+        for (var entry : playerData.soulLinkDataMap.entrySet()) {
+            if (entry.getValue().playerA().equals(playerUUID) || entry.getValue().playerB().equals(playerUUID)) {
+                // update the player's soul link reference for faster access next time
+                playerDataEntry.setSoulLinkMapUUID(entry.getKey());
+                setPlayerDataEntry(playerUUID, playerDataEntry);
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 }
