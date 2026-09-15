@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.PlayerExtensionsKt;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonCommon;
 import dev.matthiesen.cobblehardcoremon.common.CobbleHardcoreMonConfig;
+import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PartyEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokeHealthStatus;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
@@ -56,6 +57,16 @@ public final class PlayerPokeParty {
                 }
             }
         }
+
+        // Update the player's max health based on their current party size if HealthLink is enabled
+        if (hasHealthLinkEnabled(serverPlayer)) {
+            HealthLink.overridePlayerMaxHealth(serverPlayer);
+        }
+    }
+
+    public static boolean hasHealthLinkEnabled(ServerPlayer player) {
+        PlayerData.PlayerDataEntry entry = PlayerData.getPlayerDataEntry(player.getUUID());
+        return entry != null && entry.healthLinkEnabled();
     }
 
     private final ServerPlayer serverPlayer;
@@ -87,6 +98,22 @@ public final class PlayerPokeParty {
         } catch (Exception e) {
             CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to retrieve player party status: " + e.getMessage(), e);
             return new HashMap<>();
+        }
+    }
+
+    public int getLivingPokemonCount() {
+        try {
+            int count = 0;
+            for (int i = 0; i < PokePartySlot.getMaxSlots(); i++) {
+                Pokemon partyPokemon = partyStore.get(i);
+                if (partyPokemon != null && !partyPokemon.isFainted()) {
+                    count++;
+                }
+            }
+            return count;
+        } catch (Exception e) {
+            CobbleHardcoreMonCommon.INSTANCE.createErrorLog("Failed to count living Pokemon in player party: " + e.getMessage(), e);
+            return 0;
         }
     }
 

@@ -7,6 +7,7 @@ import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
 import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
@@ -17,6 +18,10 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     public CobbleHardcoreMonCommon() {
         super(MOD_ID, MOD_NAME);
+    }
+
+    public static ResourceLocation modResource(String path) {
+        return new ResourceLocation(MOD_ID, path);
     }
 
     @Override
