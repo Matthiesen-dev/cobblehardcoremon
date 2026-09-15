@@ -21,7 +21,9 @@ public final class CobbleHardcoreMonCommands implements CoreCommand {
                 .requires(source -> PermissionsRegistry.checkPermission(source, PermissionsRegistry.COMMAND_ROOT_PERMISSION))
                 .executes(this::help)
                 .then(HealthLinkCommands.SET_HEALTH_LINK)
-                .then(HealthLinkCommands.FORCE_HEALTH_LINK);
+                .then(HealthLinkCommands.GET_HEALTH_LINK)
+                .then(HealthLinkCommands.FORCE_HEALTH_LINK)
+                .then(HealthLinkCommands.GET_HEALTH_LINK_OTHER);
 
         commandDispatcher.register(rootCommand.build());
     }
