@@ -13,26 +13,48 @@ import java.util.UUID;
 
 public final class PlayerData extends SavedData {
     public static final String PLAYER_DATA_KEY = "playerData";
+    public static final String SOUL_LINK_DATA_KEY = "soulLinkData";
     public final Map<UUID, PlayerDataEntry> playerDataMap = new HashMap<>();
+    public final Map<UUID, SoulLinkData> soulLinkDataMap = new HashMap<>();
 
     @Override
     public @NotNull CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        // Player data
         CompoundTag playerDataTag = new CompoundTag();
         for (Map.Entry<UUID, PlayerDataEntry> entry : playerDataMap.entrySet()) {
             playerDataTag.put(entry.getKey().toString(), entry.getValue().toCompoundTag());
         }
         compoundTag.put(PLAYER_DATA_KEY, playerDataTag);
+
+        // Soul link data
+        CompoundTag soulLinkDataTag = new CompoundTag();
+        for (Map.Entry<UUID, SoulLinkData> entry : soulLinkDataMap.entrySet()) {
+            soulLinkDataTag.put(entry.getKey().toString(), entry.getValue().toCompoundTag());
+        }
+        compoundTag.put(SOUL_LINK_DATA_KEY, soulLinkDataTag);
+
         return compoundTag;
     }
 
     public static PlayerData load(CompoundTag compoundTag, HolderLookup.Provider provider) {
         PlayerData playerData = new PlayerData();
+
+        // Load player data
         CompoundTag playerDataTag = compoundTag.getCompound(PLAYER_DATA_KEY);
         for (String key : playerDataTag.getAllKeys()) {
             UUID uuid = UUID.fromString(key);
             PlayerDataEntry entry = PlayerDataEntry.fromCompoundTag(playerDataTag.getCompound(key));
             playerData.playerDataMap.put(uuid, entry);
         }
+
+        // Soul link data
+        CompoundTag soulLinkDataTag = compoundTag.getCompound(SOUL_LINK_DATA_KEY);
+        for (String key : soulLinkDataTag.getAllKeys()) {
+            UUID uuid = UUID.fromString(key);
+            SoulLinkData entry = SoulLinkData.fromCompoundTag(soulLinkDataTag.getCompound(key));
+            playerData.soulLinkDataMap.put(uuid, entry);
+        }
+
         return playerData;
     }
 
@@ -99,4 +121,18 @@ public final class PlayerData extends SavedData {
         }
     }
 
+    public record SoulLinkData(UUID playerA, UUID playerB) {
+        public CompoundTag toCompoundTag() {
+            CompoundTag tag = new CompoundTag();
+            tag.putUUID("playerA", playerA);
+            tag.putUUID("playerB", playerB);
+            return tag;
+        }
+
+        public static SoulLinkData fromCompoundTag(CompoundTag tag) {
+            UUID playerA = tag.getUUID("playerA");
+            UUID playerB = tag.getUUID("playerB");
+            return new SoulLinkData(playerA, playerB);
+        }
+    }
 }
