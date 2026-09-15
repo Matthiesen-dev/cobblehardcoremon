@@ -82,6 +82,18 @@ public final class PlayerData extends SavedData {
         playerData.setDirty();
     }
 
+    public static void appendSoulLinkToMap(UUID soulLinkUUID, SoulLinkDataEntry soulLinkEntry) {
+        PlayerData playerData = getPlayerData();
+        playerData.soulLinkDataMap.put(soulLinkUUID, soulLinkEntry);
+        playerData.setDirty();
+    }
+
+    public static void removeSoulLinkFromMap(UUID soulLinkUUID) {
+        PlayerData playerData = getPlayerData();
+        playerData.soulLinkDataMap.remove(soulLinkUUID);
+        playerData.setDirty();
+    }
+
     public static void setHealthLinkEnabled(UUID uuid, boolean enabled) {
         if (CobbleHardcoreMonConfig.SERVER_CONFIG.globalHealthLinkEnabled.getAsBoolean()) {
             // If the global health link is enabled, we don't allow individual players to change their setting.
@@ -95,7 +107,6 @@ public final class PlayerData extends SavedData {
     @SuppressWarnings("unused")
     public static SoulLinkDataEntry getSoulLinkByPlayerUUID(UUID playerUUID) {
         PlayerData playerData = getPlayerData();
-        // try to get the soul link directly from player first
         var playerDataEntry = getPlayerDataEntry(playerUUID);
         var soulLinkMapUUID = playerDataEntry.getSoulLinkMapUUID();
         if (soulLinkMapUUID != null) {
@@ -105,15 +116,46 @@ public final class PlayerData extends SavedData {
             }
         }
 
-        // if not found, iterate through all soul links to find one that contains the player
         for (var entry : playerData.soulLinkDataMap.entrySet()) {
             if (entry.getValue().playerA().equals(playerUUID) || entry.getValue().playerB().equals(playerUUID)) {
-                // update the player's soul link reference for faster access next time
                 playerDataEntry.setSoulLinkMapUUID(entry.getKey());
                 setPlayerDataEntry(playerUUID, playerDataEntry);
                 return entry.getValue();
             }
         }
         return null;
+    }
+
+    @SuppressWarnings("unused")
+    public static void createSoulLink(UUID playerA, UUID playerB) {
+        UUID soulLinkUUID = UUID.randomUUID();
+        SoulLinkDataEntry soulLinkEntry = new SoulLinkDataEntry(playerA, playerB);
+
+        PlayerDataEntry entryA = getPlayerDataEntry(playerA);
+        entryA.setSoulLinkMapUUID(soulLinkUUID);
+        setPlayerDataEntry(playerA, entryA);
+
+        PlayerDataEntry entryB = getPlayerDataEntry(playerB);
+        entryB.setSoulLinkMapUUID(soulLinkUUID);
+        setPlayerDataEntry(playerB, entryB);
+
+        appendSoulLinkToMap(soulLinkUUID, soulLinkEntry);
+    }
+
+    @SuppressWarnings("unused")
+    public static void removeSoulLink(UUID soulLinkUUID) {
+        PlayerData playerData = getPlayerData();
+        SoulLinkDataEntry soulLinkEntry = playerData.soulLinkDataMap.get(soulLinkUUID);
+        if (soulLinkEntry != null) {
+            PlayerDataEntry entryA = getPlayerDataEntry(soulLinkEntry.playerA());
+            entryA.setSoulLinkMapUUID(null);
+            setPlayerDataEntry(soulLinkEntry.playerA(), entryA);
+
+            PlayerDataEntry entryB = getPlayerDataEntry(soulLinkEntry.playerB());
+            entryB.setSoulLinkMapUUID(null);
+            setPlayerDataEntry(soulLinkEntry.playerB(), entryB);
+
+            removeSoulLinkFromMap(soulLinkUUID);
+        }
     }
 }
