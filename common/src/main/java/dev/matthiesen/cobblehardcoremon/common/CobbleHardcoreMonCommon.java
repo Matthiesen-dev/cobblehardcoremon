@@ -3,6 +3,7 @@ package dev.matthiesen.cobblehardcoremon.common;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
+import dev.matthiesen.cobblehardcoremon.common.handlers.MolangExt;
 import dev.matthiesen.cobblehardcoremon.common.registry.CommandRegistry;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerBattles;
 import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerPokeParty;
@@ -61,6 +62,7 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
         PermissionsRegistry.init();
         CommandRegistry.init();
+        MolangExt.init();
 
         createInfoLog("Initialized");
     }
