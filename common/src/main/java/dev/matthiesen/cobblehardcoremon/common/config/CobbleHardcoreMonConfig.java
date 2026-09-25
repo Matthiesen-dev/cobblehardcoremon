@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblehardcoremon.common.config;
 
 import dev.matthiesen.matthiesen_core.common.utility.item.ItemDecoder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -25,5 +26,11 @@ public final class CobbleHardcoreMonConfig {
 
     public static Item getTotemItem() {
         return ItemDecoder.stringToItem(SERVER_CONFIG.totemItemId.get(), Items.TOTEM_OF_UNDYING);
+    }
+
+    public static Component getErrorComponent(String errorMessage) {
+        String template = SERVER_CONFIG.messages_errorOccurred.get();
+        String message = template.replace("{error}", errorMessage);
+        return Component.literal(message);
     }
 }
