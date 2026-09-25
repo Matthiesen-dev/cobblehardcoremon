@@ -2,6 +2,7 @@ package dev.matthiesen.cobblehardcoremon.common.handlers;
 
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.PlayerExtensionsKt;
+import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
 import dev.matthiesen.cobblehardcoremon.common.data.SoulLinkDataEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
@@ -35,33 +36,38 @@ public final class SoulLink {
     }
 
     public static String getInviteValidationError(ServerPlayer sourcePlayer, ServerPlayer targetPlayer) {
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         if (sourcePlayer.getUUID().equals(targetPlayer.getUUID())) {
-            return "You cannot Soul Link with yourself.";
+            return config.messages_soulLink_inviteValidationError_self.get();
         }
         if (PlayerData.getSoulLinkByPlayerUUID(sourcePlayer.getUUID()) != null) {
-            return "You already have an active Soul Link.";
+            return config.messages_soulLink_inviteValidationError_selfAlreadyLinked.get();
         }
         if (PlayerData.getSoulLinkByPlayerUUID(targetPlayer.getUUID()) != null) {
-            return targetPlayer.getName().getString() + " already has an active Soul Link.";
+            return config.messages_soulLink_inviteValidationError_otherAlreadyLinked.get()
+                    .replace("{player}", targetPlayer.getName().getString());
         }
         if (hasPendingInviteBetween(sourcePlayer.getUUID(), targetPlayer.getUUID())) {
-            return "A Soul Link invite between you and that player is already pending.";
+            return config.messages_soulLink_inviteValidationError_alreadyInvited.get();
         }
         return null;
     }
 
     public static String getAcceptValidationError(UUID sourcePlayerUUID, UUID targetPlayerUUID) {
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         if (PlayerData.getSoulLinkByPlayerUUID(sourcePlayerUUID) != null) {
-            return getPlayerName(sourcePlayerUUID) + " already has an active Soul Link.";
+            return config.messages_soulLink_inviteValidationError_selfAlreadyLinked.get();
         }
         if (PlayerData.getSoulLinkByPlayerUUID(targetPlayerUUID) != null) {
-            return "You already have an active Soul Link.";
+            return config.messages_soulLink_inviteValidationError_otherAlreadyLinked.get()
+                    .replace("{player}", getPlayerName(targetPlayerUUID));
         }
         return null;
     }
 
     public static boolean declineInvite(UUID sourcePlayerUUID, UUID targetPlayerUUID) {
         SoulLinkInvite inviteToDecline = findInvite(sourcePlayerUUID, targetPlayerUUID);
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         if (inviteToDecline == null) {
             return false;
         }
@@ -72,10 +78,10 @@ public final class SoulLink {
         ServerUser targetPlayer = new ServerUser(targetPlayerUUID);
 
         if (sourcePlayer.isOnline()) {
-            sourcePlayer.getOnlinePlayer().sendSystemMessage(Component.literal("Your Soul Link invite to " + targetPlayer.getUsername() + " has been declined.").withStyle(ChatFormatting.RED));
+            sourcePlayer.getOnlinePlayer().sendSystemMessage(Component.literal(config.messages_soulLink_declineInvite_source.get().replace("{player}", targetPlayer.getUsername())).withStyle(ChatFormatting.RED));
         }
         if (targetPlayer.isOnline()) {
-            targetPlayer.getOnlinePlayer().sendSystemMessage(Component.literal("You have declined the Soul Link invite from " + sourcePlayer.getUsername() + ".").withStyle(ChatFormatting.RED));
+            targetPlayer.getOnlinePlayer().sendSystemMessage(Component.literal(config.messages_soulLink_declineInvite_target.get().replace("{player}", sourcePlayer.getUsername())).withStyle(ChatFormatting.RED));
         }
 
         return true;
@@ -160,73 +166,84 @@ public final class SoulLink {
     }
 
     public static void createInvite(ServerPlayer sourcePlayer, ServerPlayer targetPlayer) {
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         SoulLinkInvite invite = new SoulLinkInvite(sourcePlayer.getUUID(), targetPlayer.getUUID(), 600);
 
+        String sourceMessage = config.messages_soulLink_createInvite_source.get()
+                .replace("{player}", targetPlayer.getName().getString());
         sourcePlayer.sendSystemMessage(
-                Component.literal("You have sent a Soul Link invite to "
-                        + targetPlayer.getName().getString()
-                        + ". It will expire in 30 seconds."
-                ).withStyle(ChatFormatting.GREEN));
+                Component.literal(sourceMessage).withStyle(ChatFormatting.GREEN));
 
         Style acceptStyle = Style.EMPTY
                 .withColor(ChatFormatting.GREEN)
                 .withUnderlined(true)
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hardcoremon soulLink accept " + sourcePlayer.getUUID()))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to accept the Soul Link invite.")));
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(config.messages_soulLink_createInvite_targetAccept.get())));
 
         Style declineStyle = Style.EMPTY
                 .withColor(ChatFormatting.RED)
                 .withUnderlined(true)
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hardcoremon soulLink decline " + sourcePlayer.getUUID()))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to decline the Soul Link invite.")));
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(config.messages_soulLink_createInvite_targetDecline.get())));
 
-        MutableComponent targetMessage = Component.literal(sourcePlayer.getName().getString() + " has sent you a Soul Link invite. ")
-                .append(Component.literal("[Accept]").withStyle(acceptStyle))
+        String targetMessageBase = config.messages_soulLink_createInvite_targetMessage_base.get()
+                .replace("{player}", sourcePlayer.getName().getString());
+        MutableComponent targetMessage = Component.literal(targetMessageBase)
+                .append(Component.literal(config.messages_soulLink_createInvite_targetMessage_accept.get()).withStyle(acceptStyle))
                 .append(Component.literal(" "))
-                .append(Component.literal("[Decline]").withStyle(declineStyle));
+                .append(Component.literal(config.messages_soulLink_createInvite_targetMessage_decline.get()).withStyle(declineStyle));
 
         targetPlayer.sendSystemMessage(targetMessage);
         pendingInvites.add(invite);
     }
 
     public static void notifyExpiredInvites(List<SoulLinkInvite> expiredInvites) {
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         for (SoulLinkInvite invite : expiredInvites) {
             ServerUser sourcePlayer = new ServerUser(invite.getSourcePlayer());
             ServerUser targetPlayer = new ServerUser(invite.getTargetPlayer());
 
             if (sourcePlayer.isOnline()) {
-                sourcePlayer.getOnlinePlayer().sendSystemMessage(Component.literal("Your Soul Link invite to " + targetPlayer.getUsername() + " has expired.").withStyle(ChatFormatting.RED));
+                String message = config.messages_soulLink_expired.get().replace("{player}", targetPlayer.getUsername());
+                sourcePlayer.getOnlinePlayer().sendSystemMessage(Component.literal(message).withStyle(ChatFormatting.RED));
             }
 
             if (targetPlayer.isOnline()) {
-                targetPlayer.getOnlinePlayer().sendSystemMessage(Component.literal("The Soul Link invite from " + sourcePlayer.getUsername() + " has expired.").withStyle(ChatFormatting.RED));
+                String message = config.messages_soulLink_expired.get().replace("{player}", sourcePlayer.getUsername());
+                targetPlayer.getOnlinePlayer().sendSystemMessage(Component.literal(message).withStyle(ChatFormatting.RED));
             }
         }
     }
 
     private static void createSoulLink(UUID sourcePlayerUUID, UUID targetPlayerUUID) {
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         PlayerData.createSoulLink(sourcePlayerUUID, targetPlayerUUID);
 
         ServerUser sourcePlayer = new ServerUser(sourcePlayerUUID);
         ServerUser targetPlayer = new ServerUser(targetPlayerUUID);
 
         if (sourcePlayer.isOnline()) {
-            sourcePlayer.getOnlinePlayer().sendSystemMessage(Component.literal("Your Soul Link with " + targetPlayer.getUsername() + " is now active.").withStyle(ChatFormatting.GREEN));
+            String message = config.messages_soulLink_active.get().replace("{player}", targetPlayer.getUsername());
+            sourcePlayer.getOnlinePlayer().sendSystemMessage(Component.literal(message).withStyle(ChatFormatting.GREEN));
         }
         if (targetPlayer.isOnline()) {
-            targetPlayer.getOnlinePlayer().sendSystemMessage(Component.literal("Your Soul Link with " + sourcePlayer.getUsername() + " is now active.").withStyle(ChatFormatting.GREEN));
+            String message = config.messages_soulLink_active.get().replace("{player}", sourcePlayer.getUsername());
+            targetPlayer.getOnlinePlayer().sendSystemMessage(Component.literal(message).withStyle(ChatFormatting.GREEN));
         }
     }
 
     private static void notifySoulLinkRemoved(UUID playerAUUID, UUID playerBUUID) {
+        var config = CobbleHardcoreMonConfig.SERVER_CONFIG;
         ServerUser playerA = new ServerUser(playerAUUID);
         ServerUser playerB = new ServerUser(playerBUUID);
 
         if (playerA.isOnline()) {
-            playerA.getOnlinePlayer().sendSystemMessage(Component.literal("Your Soul Link with " + getPlayerName(playerBUUID) + " has been removed.").withStyle(ChatFormatting.YELLOW));
+            String message = config.messages_soulLink_removed.get().replace("{player}", playerB.getUsername());
+            playerA.getOnlinePlayer().sendSystemMessage(Component.literal(message).withStyle(ChatFormatting.YELLOW));
         }
         if (playerB.isOnline()) {
-            playerB.getOnlinePlayer().sendSystemMessage(Component.literal("Your Soul Link with " + getPlayerName(playerAUUID) + " has been removed.").withStyle(ChatFormatting.YELLOW));
+            String message = config.messages_soulLink_removed.get().replace("{player}", playerA.getUsername());
+            playerB.getOnlinePlayer().sendSystemMessage(Component.literal(message).withStyle(ChatFormatting.YELLOW));
         }
     }
 

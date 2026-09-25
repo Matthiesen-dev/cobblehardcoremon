@@ -40,6 +40,23 @@ public final class ServerConfig {
     public ModConfigSpec.ConfigValue<String> messages_soulLink_invites_invalidUUID;
     public ModConfigSpec.ConfigValue<String> messages_soulLink_remove_failed_noActiveLink;
     public ModConfigSpec.ConfigValue<String> messages_soulLink_remove_failed;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_pokemonRemoved;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_inviteValidationError_self;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_inviteValidationError_selfAlreadyLinked;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_inviteValidationError_otherAlreadyLinked;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_inviteValidationError_alreadyInvited;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_declineInvite_source;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_declineInvite_target;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_createInvite_source;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_createInvite_targetAccept;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_createInvite_targetDecline;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_createInvite_targetMessage_base;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_createInvite_targetMessage_accept;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_createInvite_targetMessage_decline;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_active;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_expired;
+    public ModConfigSpec.ConfigValue<String> messages_soulLink_removed;
+
 
     public ServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Server configuration for CobbleHardcoreMon mod")
@@ -157,6 +174,54 @@ public final class ServerConfig {
         messages_soulLink_remove_failed_noActiveLink = builder.comment("Message displayed when a player attempts to remove their Soul Link but they do not have an active Soul Link.")
                 .translation("cobblehardcoremon.configuration.server.messages.soulLink.remove.failed.noActiveLink")
                 .define("soulLink_remove_failed_noActiveLink", "You do not currently have an active Soul Link to remove.");
+        messages_soulLink_pokemonRemoved = builder.comment("Message displayed when a player's Pokémon is removed from their Soul Link.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.pokemonRemoved")
+                .define("soulLink_pokemonRemoved", " Soul Link removed this party slot because {partner}'s matching slot was lost.");
+        messages_soulLink_inviteValidationError_self = builder.comment("Message displayed when a player attempts to invite themselves to a Soul Link.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.inviteValidationError.self")
+                .define("soulLink_inviteValidationError_self", "You cannot Soul Link with yourself.");
+        messages_soulLink_inviteValidationError_selfAlreadyLinked = builder.comment("Message displayed when a player attempts to invite another player to a Soul Link but they are already Soul Linked with someone else.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.inviteValidationError.selfAlreadyLinked")
+                .define("soulLink_inviteValidationError_selfAlreadyLinked", "You are already Soul Linked with another player.");
+        messages_soulLink_inviteValidationError_otherAlreadyLinked = builder.comment("Message displayed when a player attempts to invite another player to a Soul Link but that player is already Soul Linked with someone else.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.inviteValidationError.otherAlreadyLinked")
+                .define("soulLink_inviteValidationError_otherAlreadyLinked", "{player} already has an active Soul Link.");
+        messages_soulLink_inviteValidationError_alreadyInvited = builder.comment("Message displayed when a player attempts to invite another player to a Soul Link but they have already sent an invite to that player.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.inviteValidationError.alreadyInvited")
+                .define("soulLink_inviteValidationError_alreadyInvited", "You have already sent a Soul Link invite to that player.");
+        messages_soulLink_declineInvite_source = builder.comment("Message displayed to the source player when their Soul Link invite is declined.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.declineInvite.source")
+                .define("soulLink_declineInvite_source", "Your Soul Link invite to {player} has been declined.");
+        messages_soulLink_declineInvite_target = builder.comment("Message displayed to the target player when they decline a Soul Link invite.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.declineInvite.target")
+                .define("soulLink_declineInvite_target", "You have declined the Soul Link invite from {player}.");
+        messages_soulLink_createInvite_source = builder.comment("Message displayed to the source player when they successfully send a Soul Link invite.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.createInvite.source")
+                .define("soulLink_createInvite_source", "You have sent a Soul Link invite to {player}. It will expire in 30 seconds.");
+        messages_soulLink_createInvite_targetAccept = builder.comment("Message displayed to the target player when they accept a Soul Link invite.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.createInvite.targetAccept")
+                .define("soulLink_createInvite_targetAccept", "Click to accept the Soul Link invite.");
+        messages_soulLink_createInvite_targetDecline = builder.comment("Message displayed to the target player when they decline a Soul Link invite.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.createInvite.targetDecline")
+                .define("soulLink_createInvite_targetDecline", "Click to decline the Soul Link invite.");
+        messages_soulLink_createInvite_targetMessage_base = builder.comment("Base message displayed to the target player when they receive a Soul Link invite. This message will be combined with either the accept or decline message depending on the player's choice.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.createInvite.targetMessage.base")
+                .define("soulLink_createInvite_targetMessage_base", "You have received a Soul Link invite from {player}. You have 30 seconds: ");
+        messages_soulLink_createInvite_targetMessage_accept = builder.comment("Message displayed to the target player when they accept a Soul Link invite. This message will be combined with the base message.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.createInvite.targetMessage.accept")
+                .define("soulLink_createInvite_targetMessage_accept", "[Accept]");
+        messages_soulLink_createInvite_targetMessage_decline = builder.comment("Message displayed to the target player when they decline a Soul Link invite. This message will be combined with the base message.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.createInvite.targetMessage.decline")
+                .define("soulLink_createInvite_targetMessage_decline", "[Decline]");
+        messages_soulLink_active = builder.comment("Message displayed to the source player when their Soul Link invite is accepted.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.active")
+                .define("soulLink_active", "You are now Soul Linked with {player}.");
+        messages_soulLink_expired = builder.comment("Message displayed to the source player when their Soul Link invite expires.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.expired")
+                .define("soulLink_expired", "Your Soul Link invite with {player} has expired.");
+        messages_soulLink_removed = builder.comment("Message displayed to the source player when their Soul Link is removed.")
+                .translation("cobblehardcoremon.configuration.server.messages.soulLink.removed")
+                .define("soulLink_removed", "Your Soul Link with {player} has been removed.");
         builder.pop(); // messages
 
         builder.pop(); // server
