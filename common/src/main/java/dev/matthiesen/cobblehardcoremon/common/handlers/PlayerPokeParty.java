@@ -163,7 +163,8 @@ public final class PlayerPokeParty {
                 String message = CobbleHardcoreMonConfig.SERVER_CONFIG.messages_pokemonRemoved.get()
                         .replace("{pokemon}", pokemonName);
                 if (linkedRemoval && linkedPlayerName != null) {
-                    message += " Soul Link removed this party slot because " + linkedPlayerName + "'s matching slot was lost.";
+                    message += CobbleHardcoreMonConfig.SERVER_CONFIG.messages_soulLink_pokemonRemoved.get()
+                            .replace("{partner}", linkedPlayerName);
                 }
                 Component chatMessage = Component.literal(message).withStyle(ChatFormatting.RED);
                 serverPlayer.sendSystemMessage(chatMessage);

@@ -116,7 +116,6 @@ public final class PlayerData extends SavedData {
         setPlayerDataEntry(uuid, entry);
     }
 
-    @SuppressWarnings("unused")
     public static SoulLinkDataEntry getSoulLinkByPlayerUUID(UUID playerUUID) {
         PlayerData playerData = getPlayerData();
         var playerDataEntry = getPlayerDataEntry(playerUUID);
@@ -138,8 +137,7 @@ public final class PlayerData extends SavedData {
         return null;
     }
 
-    @SuppressWarnings("unused")
-    public static UUID createSoulLink(UUID playerA, UUID playerB) {
+    public static void createSoulLink(UUID playerA, UUID playerB) {
         UUID soulLinkUUID = UUID.randomUUID();
         SoulLinkDataEntry soulLinkEntry = new SoulLinkDataEntry(playerA, playerB);
 
@@ -152,10 +150,8 @@ public final class PlayerData extends SavedData {
         setPlayerDataEntry(playerB, entryB);
 
         appendSoulLinkToMap(soulLinkUUID, soulLinkEntry);
-        return soulLinkUUID;
     }
 
-    @SuppressWarnings("unused")
     public static boolean removeSoulLink(UUID soulLinkUUID) {
         PlayerData playerData = getPlayerData();
         SoulLinkDataEntry soulLinkEntry = playerData.soulLinkDataMap.get(soulLinkUUID);
