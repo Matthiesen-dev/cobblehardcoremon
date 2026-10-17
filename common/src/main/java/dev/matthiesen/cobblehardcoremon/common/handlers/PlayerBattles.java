@@ -1,10 +1,7 @@
 package dev.matthiesen.cobblehardcoremon.common.handlers;
 
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle;
-import com.cobblemon.mod.common.api.events.battles.BattleFaintedEvent;
-import com.cobblemon.mod.common.api.events.battles.BattleFledEvent;
-import com.cobblemon.mod.common.api.events.battles.BattleStartedEvent;
-import com.cobblemon.mod.common.api.events.battles.BattleVictoryEvent;
+import com.cobblemon.mod.common.api.events.battles.*;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.battles.pokemon.BattlePokemon;
 import com.cobblemon.mod.common.pokemon.Pokemon;
@@ -57,11 +54,7 @@ public final class PlayerBattles {
         }
     }
 
-    public static void battleVictory(BattleVictoryEvent event) {
-        resolveTrackedBattle(event.getBattle());
-    }
-
-    public static void battleFled(BattleFledEvent event) {
+    public static void battleEnded(BattleEndedEvent event) {
         resolveTrackedBattle(event.getBattle());
     }
 
