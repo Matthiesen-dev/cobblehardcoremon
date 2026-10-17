@@ -59,8 +59,7 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
         CobblemonEvents.BATTLE_STARTED_POST.subscribe(PlayerBattles::battleStartedPost);
         CobblemonEvents.BATTLE_FAINTED.subscribe(PlayerBattles::battlePokemonFainted);
-        CobblemonEvents.BATTLE_VICTORY.subscribe(PlayerBattles::battleVictory);
-        CobblemonEvents.BATTLE_FLED.subscribe(PlayerBattles::battleFled);
+        CobblemonEvents.BATTLE_ENDED.subscribe(PlayerBattles::battleEnded);
 
         PermissionsRegistry.init();
         CommandRegistry.init();
