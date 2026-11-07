@@ -6,7 +6,7 @@ import com.bedrockk.molang.runtime.value.StringValue;
 import com.cobblemon.mod.common.api.molang.ObjectValue;
 import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
 import dev.matthiesen.cobblehardcoremon.common.data.SoulLinkDataEntry;
-import dev.matthiesen.matthiesen_core.common.utility.player_data.ServerUser;
+import dev.matthiesen.matthiesen_core.common.core.data.ServerUser;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
