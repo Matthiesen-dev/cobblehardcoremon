@@ -7,7 +7,7 @@ import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
 import dev.matthiesen.cobblehardcoremon.common.data.SoulLinkDataEntry;
 import dev.matthiesen.cobblehardcoremon.common.interfaces.PokePartySlot;
 import dev.matthiesen.matthiesen_core.common.api.events.server.ServerEvent;
-import dev.matthiesen.matthiesen_core.common.utility.player_data.ServerUser;
+import dev.matthiesen.matthiesen_core.common.core.data.ServerUser;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;

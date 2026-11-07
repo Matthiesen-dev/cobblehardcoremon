@@ -1,15 +1,11 @@
 package dev.matthiesen.cobblehardcoremon.common;
 
+import dev.faststats.Token;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import dev.matthiesen.cobblehardcoremon.common.config.CobbleHardcoreMonConfig;
 import dev.matthiesen.cobblehardcoremon.common.data.PlayerData;
-import dev.matthiesen.cobblehardcoremon.common.handlers.MolangExt;
-import dev.matthiesen.cobblehardcoremon.common.handlers.SoulLink;
-import dev.matthiesen.cobblehardcoremon.common.registry.CommandRegistry;
-import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerBattles;
-import dev.matthiesen.cobblehardcoremon.common.handlers.PlayerPokeParty;
-import dev.matthiesen.cobblehardcoremon.common.registry.PermissionsRegistry;
-import dev.matthiesen.libs.faststats.Token;
+import dev.matthiesen.cobblehardcoremon.common.registry.*;
+import dev.matthiesen.cobblehardcoremon.common.handlers.*;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
 import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
@@ -28,10 +24,6 @@ public final class CobbleHardcoreMonCommon extends AbstractCommonMod {
 
     public static ResourceLocation modResource(String path) {
         return new ResourceLocation(MOD_ID, path);
-    }
-
-    public String modConfigPath(String path) {
-        return MOD_ID + "/" + path + ".toml";
     }
 
     @Override
